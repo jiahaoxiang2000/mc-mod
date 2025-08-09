@@ -28,21 +28,25 @@ This is a Minecraft Forge mod project targeting Minecraft 1.20.1 with Forge 47.4
 The mod follows standard Forge mod structure and should be updated to match gradle.properties configuration:
 
 **Current Structure (needs updating):**
+
 - **Main mod class**: `src/main/java/com/example/examplemod/ExampleMod.java` - Contains mod initialization, registry setup, and event handling
 - **Configuration**: `src/main/java/com/example/examplemod/Config.java` - Handles mod configuration
 
 **Target Structure (based on gradle.properties):**
+
 - **Main mod class**: `src/main/java/com/isomo/mod/IsomoMod.java` - Should contain @Mod("isomomod") annotation
 - **Configuration**: `src/main/java/com/isomo/mod/Config.java` - Handles mod configuration
 - **Resources**: `src/main/resources/META-INF/mods.toml` - Mod metadata and dependencies
 - **Generated resources**: `src/generated/resources/` - Auto-generated assets from data generators
 
 **Package Structure:**
+
 - Base package: `com.isomo.mod` (from mod_group_id in gradle.properties)
 - Mod ID: `isomomod` (from mod_id in gradle.properties)
 - Main class should be annotated with @Mod("isomomod")
 
 ### Key Configuration Files
+
 - `gradle.properties` - Contains mod metadata (mod_id: isomomod, version: 1.0.0, author: isomo, group_id: com.isomo.mod)
 - `build.gradle` - Forge build configuration with Chinese mirror repositories for faster downloads
 - `run/` - Development runtime directory for client/server testing
@@ -50,6 +54,7 @@ The mod follows standard Forge mod structure and should be updated to match grad
 ## Architecture Notes
 
 The mod uses Forge's DeferredRegister system for registering content:
+
 - Blocks registered through `IsomoMod.BLOCKS` (or equivalent in main mod class)
 - Items registered through `IsomoMod.ITEMS` (or equivalent in main mod class)
 - Creative tabs registered through `IsomoMod.CREATIVE_MODE_TABS` (or equivalent in main mod class)
