@@ -8,6 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### ✨ Added
+- Future features will be listed here
+
+### 🔄 Changed
+- Future changes will be listed here
+
+### 🐛 Fixed
+- Future bug fixes will be listed here
+
+---
+
+## [1.0.0] - 2025-08-09
+
+### ✨ Added
 
 - **Left-Click Block Deletion** - Delete blocks using the same patterns as placement!
   - **Left-click functionality**: Delete blocks at the direct hit position (not adjacent)
@@ -92,6 +105,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 🔒 **Security** for vulnerability fixes
 - 📚 **Documentation** for documentation changes
 - ⚡ **Performance** for performance improvements
+
+## Version Links
+
+- [Unreleased]: https://github.com/username/isomo-mod/compare/v1.0.0...HEAD
+- [1.0.0]: https://github.com/username/isomo-mod/releases/tag/v1.0.0
 
 ## Links
 
