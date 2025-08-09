@@ -42,26 +42,27 @@ public interface BuildPattern {
     String getName();
     
     /**
-     * Calculates all block positions for this pattern relative to a center point.
+     * Calculates all block positions for this pattern relative to an anchor point.
      * 
-     * <p>This method takes a center position and returns a list of all block
+     * <p>This method takes an anchor position and returns a list of all block
      * positions that should be part of this pattern. The positions are absolute
      * world coordinates, calculated by applying the pattern's offset logic to
-     * the provided center position.
+     * the provided anchor position. The anchor typically represents the starting
+     * edge or corner of the pattern.
      * 
      * <p>Implementations should:
      * <ul>
      *   <li>Return a new list each time (defensive copying)</li>
      *   <li>Never return null (return empty list if no positions)</li>
-     *   <li>Include the center position if it's part of the pattern</li>
-     *   <li>Use consistent coordinate system (center-relative)</li>
+     *   <li>Include the anchor position if it's part of the pattern</li>
+     *   <li>Use consistent coordinate system (anchor-relative)</li>
      * </ul>
      * 
-     * @param center the center point around which to build the pattern
+     * @param anchor the anchor point from which to build the pattern
      * @return a list of absolute block positions for this pattern, never null
-     * @throws IllegalArgumentException if center is null
+     * @throws IllegalArgumentException if anchor is null
      */
-    List<BlockPos> getPositions(BlockPos center);
+    List<BlockPos> getPositions(BlockPos anchor);
     
     /**
      * Gets a detailed description of this build pattern.
@@ -96,14 +97,14 @@ public interface BuildPattern {
      * rotation transformation. Patterns that don't benefit from rotation (like
      * single blocks or symmetric patterns) may override this to optimize performance.
      * 
-     * @param center the center point around which to build the pattern
+     * @param anchor the anchor point from which to build the pattern
      * @param rotations number of 90-degree rotation steps (0-3, wraps around)
      * @return a list of absolute block positions for this rotated pattern, never null
-     * @throws IllegalArgumentException if center is null
+     * @throws IllegalArgumentException if anchor is null
      */
-    default List<BlockPos> getRotatedPositions(BlockPos center, int rotations) {
-        if (center == null) {
-            throw new IllegalArgumentException("Center position cannot be null");
+    default List<BlockPos> getRotatedPositions(BlockPos anchor, int rotations) {
+        if (anchor == null) {
+            throw new IllegalArgumentException("Anchor position cannot be null");
         }
         
         // Normalize rotations to 0-3 range
@@ -111,18 +112,18 @@ public interface BuildPattern {
         
         // No rotation needed
         if (normalizedRotations == 0) {
-            return getPositions(center);
+            return getPositions(anchor);
         }
         
-        // Get base positions and apply rotation
-        List<BlockPos> basePositions = getPositions(center);
+        // Get base positions and apply rotation around the anchor point
+        List<BlockPos> basePositions = getPositions(anchor);
         List<BlockPos> rotatedPositions = new ArrayList<>();
         
         for (BlockPos pos : basePositions) {
-            // Calculate relative position from center
-            int relativeX = pos.getX() - center.getX();
-            int relativeZ = pos.getZ() - center.getZ();
-            int relativeY = pos.getY() - center.getY();
+            // Calculate relative position from anchor
+            int relativeX = pos.getX() - anchor.getX();
+            int relativeZ = pos.getZ() - anchor.getZ();
+            int relativeY = pos.getY() - anchor.getY();
             
             // Apply rotation around Y-axis
             int newX = relativeX;
@@ -135,7 +136,7 @@ public interface BuildPattern {
             }
             
             // Convert back to absolute position
-            rotatedPositions.add(center.offset(newX, relativeY, newZ));
+            rotatedPositions.add(anchor.offset(newX, relativeY, newZ));
         }
         
         return rotatedPositions;

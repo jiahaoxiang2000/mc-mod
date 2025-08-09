@@ -33,7 +33,7 @@ public class BuildPatterns {
     /**
      * Single block placement pattern.
      * 
-     * <p>The most basic pattern that places only one block at the center position.
+     * <p>The most basic pattern that places only one block at the anchor position.
      * This is the default pattern and is useful for precise single-block placement
      * with wireframe guidance.
      */
@@ -44,22 +44,22 @@ public class BuildPatterns {
         }
         
         @Override
-        public List<BlockPos> getPositions(BlockPos center) {
-            return List.of(center);
+        public List<BlockPos> getPositions(BlockPos anchor) {
+            return List.of(anchor);
         }
         
         @Override
         public String getDescription() {
-            return "Single block placement";
+            return "Single block placement at anchor point";
         }
     };
     
     /**
      * 3x3 vertical wall pattern.
      * 
-     * <p>Creates a 3x3 grid of blocks in the vertical plane (X-Y plane, Z=center).
-     * The pattern centers on the provided position and extends 1 block in each
-     * direction horizontally and vertically. Useful for building walls, windows,
+     * <p>Creates a 3x3 grid of blocks in the vertical plane (X-Y plane, Z=anchor).
+     * The pattern starts from the anchor position (bottom-left corner) and extends
+     * 3 blocks right and 3 blocks up. Useful for building walls, windows,
      * or decorative panels.
      */
     public static final BuildPattern WALL_3X3 = new BuildPattern() {
@@ -69,11 +69,11 @@ public class BuildPatterns {
         }
         
         @Override
-        public List<BlockPos> getPositions(BlockPos center) {
+        public List<BlockPos> getPositions(BlockPos anchor) {
             List<BlockPos> positions = new ArrayList<>();
-            for (int x = -1; x <= 1; x++) {
-                for (int y = -1; y <= 1; y++) {
-                    positions.add(center.offset(x, y, 0));
+            for (int x = 0; x < 3; x++) {
+                for (int y = 0; y < 3; y++) {
+                    positions.add(anchor.offset(x, y, 0));
                 }
             }
             return positions;
@@ -81,16 +81,16 @@ public class BuildPatterns {
         
         @Override
         public String getDescription() {
-            return "3x3 wall pattern";
+            return "3x3 wall pattern starting from anchor point";
         }
     };
     
     /**
      * 5x5 horizontal floor pattern.
      * 
-     * <p>Creates a 5x5 grid of blocks in the horizontal plane (X-Z plane, Y=center).
-     * The pattern centers on the provided position and extends 2 blocks in each
-     * horizontal direction. Perfect for building floors, ceilings, or platforms.
+     * <p>Creates a 5x5 grid of blocks in the horizontal plane (X-Z plane, Y=anchor).
+     * The pattern starts from the anchor position (corner) and extends 5 blocks
+     * in both X and Z directions. Perfect for building floors, ceilings, or platforms.
      */
     public static final BuildPattern FLOOR_5X5 = new BuildPattern() {
         @Override
@@ -99,11 +99,11 @@ public class BuildPatterns {
         }
         
         @Override
-        public List<BlockPos> getPositions(BlockPos center) {
+        public List<BlockPos> getPositions(BlockPos anchor) {
             List<BlockPos> positions = new ArrayList<>();
-            for (int x = -2; x <= 2; x++) {
-                for (int z = -2; z <= 2; z++) {
-                    positions.add(center.offset(x, 0, z));
+            for (int x = 0; x < 5; x++) {
+                for (int z = 0; z < 5; z++) {
+                    positions.add(anchor.offset(x, 0, z));
                 }
             }
             return positions;
@@ -111,15 +111,15 @@ public class BuildPatterns {
         
         @Override
         public String getDescription() {
-            return "5x5 floor pattern";
+            return "5x5 floor pattern starting from corner";
         }
     };
     
     /**
      * 5-block high vertical pillar pattern.
      * 
-     * <p>Creates a vertical column of 5 blocks starting at the center position
-     * and extending upward. The pattern builds from the center position (Y=0 offset)
+     * <p>Creates a vertical column of 5 blocks starting at the anchor position
+     * and extending upward. The pattern builds from the anchor position (bottom)
      * to 4 blocks above it. Useful for building pillars, towers, or support columns.
      */
     public static final BuildPattern PILLAR_HEIGHT_5 = new BuildPattern() {
@@ -129,17 +129,17 @@ public class BuildPatterns {
         }
         
         @Override
-        public List<BlockPos> getPositions(BlockPos center) {
+        public List<BlockPos> getPositions(BlockPos anchor) {
             List<BlockPos> positions = new ArrayList<>();
             for (int y = 0; y < 5; y++) {
-                positions.add(center.offset(0, y, 0));
+                positions.add(anchor.offset(0, y, 0));
             }
             return positions;
         }
         
         @Override
         public String getDescription() {
-            return "5 block high pillar";
+            return "5 block high pillar starting from base";
         }
     };
     
@@ -147,8 +147,8 @@ public class BuildPatterns {
      * 5-block horizontal line pattern.
      * 
      * <p>Creates a straight line of 5 blocks in the X direction (east-west).
-     * The pattern centers on the provided position and extends 2 blocks in each
-     * direction along the X-axis. Useful for building foundations, borders, or
+     * The pattern starts from the anchor position and extends 5 blocks in the
+     * positive X direction. Useful for building foundations, borders, or
      * alignment guides.
      */
     public static final BuildPattern LINE_HORIZONTAL_5 = new BuildPattern() {
@@ -158,17 +158,17 @@ public class BuildPatterns {
         }
         
         @Override
-        public List<BlockPos> getPositions(BlockPos center) {
+        public List<BlockPos> getPositions(BlockPos anchor) {
             List<BlockPos> positions = new ArrayList<>();
-            for (int x = -2; x <= 2; x++) {
-                positions.add(center.offset(x, 0, 0));
+            for (int x = 0; x < 5; x++) {
+                positions.add(anchor.offset(x, 0, 0));
             }
             return positions;
         }
         
         @Override
         public String getDescription() {
-            return "5 block horizontal line";
+            return "5 block horizontal line starting from anchor";
         }
     };
     
