@@ -1,5 +1,6 @@
 package com.isomo.mod;
 
+import com.isomo.mod.command.BuildModeCommand;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
@@ -21,6 +22,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -125,6 +127,12 @@ public class IsomoMod
             
             // Initialize build mode system
             LOGGER.info("Initializing Build Mode System");
+        }
+        
+        @SubscribeEvent
+        public static void registerClientCommands(RegisterClientCommandsEvent event) {
+            BuildModeCommand.register(event.getDispatcher());
+            LOGGER.info("Registered Build Mode commands");
         }
     }
 }

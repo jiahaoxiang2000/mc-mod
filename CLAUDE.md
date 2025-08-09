@@ -29,7 +29,7 @@ This is a Minecraft Forge mod project targeting Minecraft 1.20.1 with Forge 47.4
 
 When finishing code changes, you MUST:
 
-1. **Update changelog.txt**: Add detailed entry for new features/changes following the existing format
+1. **Update CHANGELOG.md**: Add detailed entry for new features/changes following the existing format
 2. **Update README.md**: Reflect any new functionality or changes in the README
 3. **Comprehensive Documentation**: Ensure all new code has complete Javadoc comments
 4. **Cross-Reference**: Add appropriate `@see` tags to link related functionality

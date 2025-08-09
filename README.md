@@ -6,7 +6,8 @@ A Minecraft Forge mod for Minecraft 1.20.1 that provides a comprehensive toolbox
 
 ### Build Mode System
 - **Toggle Build Mode**: Press 'B' to activate/deactivate wireframe preview mode
-- **Real-time Wireframes**: Green wireframe previews follow your cursor for precise building
+- **Real-time Wireframes**: Configurable colored wireframe previews follow your cursor for precise building
+- **Runtime Configuration**: Change colors and settings instantly without restarting the client
 - **Multiple Build Patterns**: Choose from 5 different building patterns:
   - **Single Block**: Precise single-block placement
   - **Wall 3x3**: 3x3 vertical wall pattern
@@ -34,6 +35,15 @@ A Minecraft Forge mod for Minecraft 1.20.1 that provides a comprehensive toolbox
 - **B Key**: Toggle build mode on/off (configurable in controls menu)
 - **Mouse Wheel**: Switch between build patterns (when in build mode)
 
+## Commands
+
+- **`/buildmode color [preset]`**: Change wireframe color using presets (blue, green, yellow, purple, cyan, white)
+- **`/buildmode color [r] [g] [b] [a]`**: Set custom RGBA wireframe color (values 0.0-1.0)
+- **`/buildmode reach [distance]`**: Set preview reach distance (1-10 blocks)
+- **`/buildmode info`**: Display current configuration settings
+
+All configuration changes take effect immediately without requiring a client restart!
+
 ## Technical Details
 
 ### Architecture
@@ -55,6 +65,8 @@ All patterns are implemented through the `BuildPattern` interface and provide:
 src/main/java/com/isomo/mod/
 ├── building/           # Build pattern definitions
 ├── client/             # Client-side managers and handlers  
+├── command/           # Runtime configuration commands
+├── config/            # Configuration management system
 ├── event/             # Event handling system
 └── IsomoMod.java      # Main mod class
 ```
@@ -64,7 +76,7 @@ This mod follows standard Java coding conventions with comprehensive documentati
 
 ## Version History
 
-See [changelog.txt](changelog.txt) for detailed version history and feature additions.
+See [CHANGELOG.md](CHANGELOG.md) for detailed version history and feature additions.
 
 ## License
 

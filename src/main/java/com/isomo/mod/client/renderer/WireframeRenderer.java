@@ -5,6 +5,7 @@ import java.util.List;
 import org.joml.Matrix4f;
 
 import com.isomo.mod.client.BuildModeManager;
+import com.isomo.mod.config.BuildModeConfig;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
@@ -26,8 +27,8 @@ import net.minecraft.world.phys.Vec3;
  * 
  * <p>Features:
  * <ul>
- *   <li>Green wireframes for valid build positions</li>
- *   <li>Red wireframes for invalid positions (reserved for future use)</li>
+ *   <li>Configurable wireframe colors that can be changed at runtime</li>
+ *   <li>Separate colors for valid and invalid build positions</li>
  *   <li>Camera-relative positioning for proper world rendering</li>
  *   <li>Efficient batch rendering of multiple wireframes</li>
  * </ul>
@@ -36,12 +37,6 @@ import net.minecraft.world.phys.Vec3;
  * @since 1.0.0
  */
 public class WireframeRenderer {
-    
-    /** Color array for valid build position wireframes (bright green with transparency) */
-    private static final float[] WIREFRAME_COLOR = {0.0f, 1.0f, 0.0f, 0.8f}; // Green
-    
-    /** Color array for invalid build position wireframes (red with transparency) */
-    private static final float[] INVALID_COLOR = {1.0f, 0.0f, 0.0f, 0.8f}; // Red
     
     /**
      * Renders wireframe previews for all positions in the current build pattern.
@@ -76,9 +71,11 @@ public class WireframeRenderer {
         }
         
         VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.lines());
+        BuildModeConfig config = BuildModeConfig.getInstance();
+        float[] wireframeColor = config.getWireframeColor();
         
         for (BlockPos pos : positions) {
-            renderBlockWireframe(poseStack, vertexConsumer, pos, cameraPos, WIREFRAME_COLOR);
+            renderBlockWireframe(poseStack, vertexConsumer, pos, cameraPos, wireframeColor);
         }
     }
     
