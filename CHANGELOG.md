@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### ✨ Added
 
+- **Configurable Pattern Sizes** - Change pattern sizes dynamically without hardcoding!
+  - **`/buildmode size wall [width] [height]`**: Configure wall pattern dimensions (1-50 blocks)
+  - **`/buildmode size floor [width] [depth]`**: Configure floor pattern dimensions (1-50 blocks)
+  - **`/buildmode size pillar [height]`**: Configure pillar height (1-50 blocks)
+  - **`/buildmode size line [length]`**: Configure line length (1-50 blocks)
+  - **Dynamic Pattern Names**: Pattern names update to show current size (e.g., "Wall 7x4", "Floor 10x8")
+  - **Instant Changes**: Size changes take effect immediately without restart
 - **Pattern Rotation System** - Rotate build patterns by 90° using the 'R' key!
   - **'R' Key Binding**: Rotate current pattern clockwise (0° → 90° → 180° → 270° → back to 0°)
   - **Smart Rotation Logic**: Automatically applies appropriate rotation to each pattern type

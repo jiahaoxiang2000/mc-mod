@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.isomo.mod.config.BuildModeConfig;
+
 /**
  * Collection of predefined build patterns for the build mode system.
  * 
@@ -55,24 +57,26 @@ public class BuildPatterns {
     };
     
     /**
-     * 3x3 vertical wall pattern.
+     * Configurable vertical wall pattern.
      * 
-     * <p>Creates a 3x3 grid of blocks in the vertical plane (X-Y plane, Z=anchor).
+     * <p>Creates a configurable grid of blocks in the vertical plane (X-Y plane, Z=anchor).
      * The pattern starts from the anchor position (bottom-left corner) and extends
-     * 3 blocks right and 3 blocks up. Useful for building walls, windows,
+     * according to configured width and height. Useful for building walls, windows,
      * or decorative panels.
      */
     public static final BuildPattern WALL_3X3 = new BuildPattern() {
         @Override
         public String getName() {
-            return "Wall 3x3";
+            BuildModeConfig config = BuildModeConfig.getInstance();
+            return "Wall " + config.getWallWidth() + "x" + config.getWallHeight();
         }
         
         @Override
         public List<BlockPos> getPositions(BlockPos anchor) {
+            BuildModeConfig config = BuildModeConfig.getInstance();
             List<BlockPos> positions = new ArrayList<>();
-            for (int x = 0; x < 3; x++) {
-                for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < config.getWallWidth(); x++) {
+                for (int y = 0; y < config.getWallHeight(); y++) {
                     positions.add(anchor.offset(x, y, 0));
                 }
             }
@@ -81,28 +85,31 @@ public class BuildPatterns {
         
         @Override
         public String getDescription() {
-            return "3x3 wall pattern starting from anchor point";
+            BuildModeConfig config = BuildModeConfig.getInstance();
+            return config.getWallWidth() + "x" + config.getWallHeight() + " wall pattern starting from anchor point";
         }
     };
     
     /**
-     * 5x5 horizontal floor pattern.
+     * Configurable horizontal floor pattern.
      * 
-     * <p>Creates a 5x5 grid of blocks in the horizontal plane (X-Z plane, Y=anchor).
-     * The pattern starts from the anchor position (corner) and extends 5 blocks
-     * in both X and Z directions. Perfect for building floors, ceilings, or platforms.
+     * <p>Creates a configurable grid of blocks in the horizontal plane (X-Z plane, Y=anchor).
+     * The pattern starts from the anchor position (corner) and extends according to
+     * configured width and depth. Perfect for building floors, ceilings, or platforms.
      */
     public static final BuildPattern FLOOR_5X5 = new BuildPattern() {
         @Override
         public String getName() {
-            return "Floor 5x5";
+            BuildModeConfig config = BuildModeConfig.getInstance();
+            return "Floor " + config.getFloorWidth() + "x" + config.getFloorDepth();
         }
         
         @Override
         public List<BlockPos> getPositions(BlockPos anchor) {
+            BuildModeConfig config = BuildModeConfig.getInstance();
             List<BlockPos> positions = new ArrayList<>();
-            for (int x = 0; x < 5; x++) {
-                for (int z = 0; z < 5; z++) {
+            for (int x = 0; x < config.getFloorWidth(); x++) {
+                for (int z = 0; z < config.getFloorDepth(); z++) {
                     positions.add(anchor.offset(x, 0, z));
                 }
             }
@@ -111,27 +118,30 @@ public class BuildPatterns {
         
         @Override
         public String getDescription() {
-            return "5x5 floor pattern starting from corner";
+            BuildModeConfig config = BuildModeConfig.getInstance();
+            return config.getFloorWidth() + "x" + config.getFloorDepth() + " floor pattern starting from corner";
         }
     };
     
     /**
-     * 5-block high vertical pillar pattern.
+     * Configurable vertical pillar pattern.
      * 
-     * <p>Creates a vertical column of 5 blocks starting at the anchor position
+     * <p>Creates a vertical column of configurable height starting at the anchor position
      * and extending upward. The pattern builds from the anchor position (bottom)
-     * to 4 blocks above it. Useful for building pillars, towers, or support columns.
+     * according to configured height. Useful for building pillars, towers, or support columns.
      */
     public static final BuildPattern PILLAR_HEIGHT_5 = new BuildPattern() {
         @Override
         public String getName() {
-            return "Pillar 5H";
+            BuildModeConfig config = BuildModeConfig.getInstance();
+            return "Pillar " + config.getPillarHeight() + "H";
         }
         
         @Override
         public List<BlockPos> getPositions(BlockPos anchor) {
+            BuildModeConfig config = BuildModeConfig.getInstance();
             List<BlockPos> positions = new ArrayList<>();
-            for (int y = 0; y < 5; y++) {
+            for (int y = 0; y < config.getPillarHeight(); y++) {
                 positions.add(anchor.offset(0, y, 0));
             }
             return positions;
@@ -139,28 +149,31 @@ public class BuildPatterns {
         
         @Override
         public String getDescription() {
-            return "5 block high pillar starting from base";
+            BuildModeConfig config = BuildModeConfig.getInstance();
+            return config.getPillarHeight() + " block high pillar starting from base";
         }
     };
     
     /**
-     * 5-block horizontal line pattern.
+     * Configurable horizontal line pattern.
      * 
-     * <p>Creates a straight line of 5 blocks in the X direction (east-west).
-     * The pattern starts from the anchor position and extends 5 blocks in the
-     * positive X direction. Useful for building foundations, borders, or
+     * <p>Creates a straight line of configurable length in the X direction (east-west).
+     * The pattern starts from the anchor position and extends according to configured
+     * length in the positive X direction. Useful for building foundations, borders, or
      * alignment guides.
      */
     public static final BuildPattern LINE_HORIZONTAL_5 = new BuildPattern() {
         @Override
         public String getName() {
-            return "Line H5";
+            BuildModeConfig config = BuildModeConfig.getInstance();
+            return "Line H" + config.getLineLength();
         }
         
         @Override
         public List<BlockPos> getPositions(BlockPos anchor) {
+            BuildModeConfig config = BuildModeConfig.getInstance();
             List<BlockPos> positions = new ArrayList<>();
-            for (int x = 0; x < 5; x++) {
+            for (int x = 0; x < config.getLineLength(); x++) {
                 positions.add(anchor.offset(x, 0, 0));
             }
             return positions;
@@ -168,7 +181,8 @@ public class BuildPatterns {
         
         @Override
         public String getDescription() {
-            return "5 block horizontal line starting from anchor";
+            BuildModeConfig config = BuildModeConfig.getInstance();
+            return config.getLineLength() + " block horizontal line starting from anchor";
         }
     };
     

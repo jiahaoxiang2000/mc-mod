@@ -25,6 +25,10 @@ import net.minecraft.network.chat.Component;
  *   <li>/buildmode color [r] [g] [b] [a] - Set custom RGBA color</li>
  *   <li>/buildmode reach [distance] - Set preview reach distance</li>
  *   <li>/buildmode rotation [0-3] - Set pattern rotation (0°, 90°, 180°, 270°)</li>
+ *   <li>/buildmode size wall [width] [height] - Set wall pattern size</li>
+ *   <li>/buildmode size floor [width] [depth] - Set floor pattern size</li>
+ *   <li>/buildmode size pillar [height] - Set pillar pattern height</li>
+ *   <li>/buildmode size line [length] - Set line pattern length</li>
  *   <li>/buildmode info - Display current configuration</li>
  * </ul>
  * 
@@ -64,6 +68,21 @@ public class BuildModeCommand {
             .then(Commands.literal("rotation")
                 .then(Commands.argument("angle", IntegerArgumentType.integer(0, 3))
                     .executes(BuildModeCommand::setRotation)))
+            .then(Commands.literal("size")
+                .then(Commands.literal("wall")
+                    .then(Commands.argument("width", IntegerArgumentType.integer(1, 50))
+                        .then(Commands.argument("height", IntegerArgumentType.integer(1, 50))
+                            .executes(BuildModeCommand::setWallSize))))
+                .then(Commands.literal("floor")
+                    .then(Commands.argument("width", IntegerArgumentType.integer(1, 50))
+                        .then(Commands.argument("depth", IntegerArgumentType.integer(1, 50))
+                            .executes(BuildModeCommand::setFloorSize))))
+                .then(Commands.literal("pillar")
+                    .then(Commands.argument("height", IntegerArgumentType.integer(1, 50))
+                        .executes(BuildModeCommand::setPillarSize)))
+                .then(Commands.literal("line")
+                    .then(Commands.argument("length", IntegerArgumentType.integer(1, 50))
+                        .executes(BuildModeCommand::setLineSize))))
             .then(Commands.literal("info")
                 .executes(BuildModeCommand::showInfo))
         );
@@ -153,6 +172,82 @@ public class BuildModeCommand {
     }
     
     /**
+     * Sets the wall pattern size.
+     * 
+     * @param context the command execution context
+     * @return command execution result code
+     */
+    private static int setWallSize(CommandContext<CommandSourceStack> context) {
+        int width = IntegerArgumentType.getInteger(context, "width");
+        int height = IntegerArgumentType.getInteger(context, "height");
+        
+        BuildModeConfig config = BuildModeConfig.getInstance();
+        config.setWallWidth(width);
+        config.setWallHeight(height);
+        
+        context.getSource().sendSuccess(() -> 
+            Component.literal("Wall pattern size set to " + width + "x" + height), false);
+        
+        return 1;
+    }
+    
+    /**
+     * Sets the floor pattern size.
+     * 
+     * @param context the command execution context
+     * @return command execution result code
+     */
+    private static int setFloorSize(CommandContext<CommandSourceStack> context) {
+        int width = IntegerArgumentType.getInteger(context, "width");
+        int depth = IntegerArgumentType.getInteger(context, "depth");
+        
+        BuildModeConfig config = BuildModeConfig.getInstance();
+        config.setFloorWidth(width);
+        config.setFloorDepth(depth);
+        
+        context.getSource().sendSuccess(() -> 
+            Component.literal("Floor pattern size set to " + width + "x" + depth), false);
+        
+        return 1;
+    }
+    
+    /**
+     * Sets the pillar pattern height.
+     * 
+     * @param context the command execution context
+     * @return command execution result code
+     */
+    private static int setPillarSize(CommandContext<CommandSourceStack> context) {
+        int height = IntegerArgumentType.getInteger(context, "height");
+        
+        BuildModeConfig config = BuildModeConfig.getInstance();
+        config.setPillarHeight(height);
+        
+        context.getSource().sendSuccess(() -> 
+            Component.literal("Pillar pattern height set to " + height + " blocks"), false);
+        
+        return 1;
+    }
+    
+    /**
+     * Sets the line pattern length.
+     * 
+     * @param context the command execution context
+     * @return command execution result code
+     */
+    private static int setLineSize(CommandContext<CommandSourceStack> context) {
+        int length = IntegerArgumentType.getInteger(context, "length");
+        
+        BuildModeConfig config = BuildModeConfig.getInstance();
+        config.setLineLength(length);
+        
+        context.getSource().sendSuccess(() -> 
+            Component.literal("Line pattern length set to " + length + " blocks"), false);
+        
+        return 1;
+    }
+    
+    /**
      * Displays current build mode configuration information.
      * 
      * @param context the command execution context
@@ -181,6 +276,21 @@ public class BuildModeCommand {
         
         context.getSource().sendSuccess(() -> 
             Component.literal("Build Mode Active: " + (manager.isBuildModeActive() ? "Yes" : "No")), false);
+        
+        context.getSource().sendSuccess(() -> 
+            Component.literal("=== Pattern Sizes ==="), false);
+        
+        context.getSource().sendSuccess(() -> 
+            Component.literal("Wall: " + config.getWallWidth() + "x" + config.getWallHeight()), false);
+        
+        context.getSource().sendSuccess(() -> 
+            Component.literal("Floor: " + config.getFloorWidth() + "x" + config.getFloorDepth()), false);
+        
+        context.getSource().sendSuccess(() -> 
+            Component.literal("Pillar Height: " + config.getPillarHeight() + " blocks"), false);
+        
+        context.getSource().sendSuccess(() -> 
+            Component.literal("Line Length: " + config.getLineLength() + " blocks"), false);
         
         context.getSource().sendSuccess(() -> 
             Component.literal("Pattern Names: " + (config.isShowPatternName() ? "Enabled" : "Disabled")), false);

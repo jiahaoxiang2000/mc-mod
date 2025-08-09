@@ -35,6 +35,20 @@ public class BuildModeConfig {
     /** Maximum reach distance for previews */
     private double reachDistance = 5.0;
     
+    /** Configurable wall pattern size (width x height) */
+    private int wallWidth = 3;
+    private int wallHeight = 3;
+    
+    /** Configurable floor pattern size (width x depth) */
+    private int floorWidth = 5;
+    private int floorDepth = 5;
+    
+    /** Configurable pillar height */
+    private int pillarHeight = 5;
+    
+    /** Configurable line length */
+    private int lineLength = 5;
+    
     /**
      * Private constructor to enforce singleton pattern.
      */
@@ -153,6 +167,141 @@ public class BuildModeConfig {
             throw new IllegalArgumentException("Reach distance must be between 1.0 and 128.0 blocks");
         }
         this.reachDistance = distance;
+    }
+    
+    // Pattern size getters and setters
+    
+    /**
+     * Gets the current wall width.
+     * 
+     * @return wall width in blocks
+     */
+    public int getWallWidth() {
+        return wallWidth;
+    }
+    
+    /**
+     * Sets the wall width.
+     * 
+     * @param width wall width in blocks (1-50)
+     * @throws IllegalArgumentException if width is outside valid range
+     */
+    public void setWallWidth(int width) {
+        validatePatternSize(width, "wall width");
+        this.wallWidth = width;
+    }
+    
+    /**
+     * Gets the current wall height.
+     * 
+     * @return wall height in blocks
+     */
+    public int getWallHeight() {
+        return wallHeight;
+    }
+    
+    /**
+     * Sets the wall height.
+     * 
+     * @param height wall height in blocks (1-50)
+     * @throws IllegalArgumentException if height is outside valid range
+     */
+    public void setWallHeight(int height) {
+        validatePatternSize(height, "wall height");
+        this.wallHeight = height;
+    }
+    
+    /**
+     * Gets the current floor width.
+     * 
+     * @return floor width in blocks
+     */
+    public int getFloorWidth() {
+        return floorWidth;
+    }
+    
+    /**
+     * Sets the floor width.
+     * 
+     * @param width floor width in blocks (1-50)
+     * @throws IllegalArgumentException if width is outside valid range
+     */
+    public void setFloorWidth(int width) {
+        validatePatternSize(width, "floor width");
+        this.floorWidth = width;
+    }
+    
+    /**
+     * Gets the current floor depth.
+     * 
+     * @return floor depth in blocks
+     */
+    public int getFloorDepth() {
+        return floorDepth;
+    }
+    
+    /**
+     * Sets the floor depth.
+     * 
+     * @param depth floor depth in blocks (1-50)
+     * @throws IllegalArgumentException if depth is outside valid range
+     */
+    public void setFloorDepth(int depth) {
+        validatePatternSize(depth, "floor depth");
+        this.floorDepth = depth;
+    }
+    
+    /**
+     * Gets the current pillar height.
+     * 
+     * @return pillar height in blocks
+     */
+    public int getPillarHeight() {
+        return pillarHeight;
+    }
+    
+    /**
+     * Sets the pillar height.
+     * 
+     * @param height pillar height in blocks (1-50)
+     * @throws IllegalArgumentException if height is outside valid range
+     */
+    public void setPillarHeight(int height) {
+        validatePatternSize(height, "pillar height");
+        this.pillarHeight = height;
+    }
+    
+    /**
+     * Gets the current line length.
+     * 
+     * @return line length in blocks
+     */
+    public int getLineLength() {
+        return lineLength;
+    }
+    
+    /**
+     * Sets the line length.
+     * 
+     * @param length line length in blocks (1-50)
+     * @throws IllegalArgumentException if length is outside valid range
+     */
+    public void setLineLength(int length) {
+        validatePatternSize(length, "line length");
+        this.lineLength = length;
+    }
+    
+    /**
+     * Validates that a pattern size is within the valid range.
+     * 
+     * @param value the pattern size value to validate
+     * @param componentName the name of the component for error messages
+     * @throws IllegalArgumentException if value is outside 1-50 range
+     */
+    private void validatePatternSize(int value, String componentName) {
+        if (value < 1 || value > 50) {
+            throw new IllegalArgumentException(componentName + " must be between 1 and 50 blocks");
+        }
     }
     
     /**

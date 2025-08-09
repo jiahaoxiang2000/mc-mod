@@ -12,12 +12,13 @@ A Minecraft Forge mod for Minecraft 1.20.1 that provides a comprehensive toolbox
 - **Extended Block Placement**: Place blocks at the same distance as wireframe previews (beyond vanilla reach)
 - **Pattern-Based Placement**: Place entire patterns with a single right-click
 - **Runtime Configuration**: Change colors and settings instantly without restarting the client
-- **Multiple Build Patterns**: Choose from 5 different building patterns:
+- **Multiple Build Patterns**: Choose from 5 different configurable building patterns:
   - **Single Block**: Precise single-block placement
-  - **Wall 3x3**: 3x3 vertical wall pattern (rotatable)
-  - **Floor 5x5**: 5x5 horizontal floor pattern  
-  - **Pillar 5H**: 5-block high vertical pillar
-  - **Line H5**: 5-block horizontal line (rotatable: East-West ↔ North-South)
+  - **Wall**: Configurable vertical wall pattern (default 3x3, rotatable)
+  - **Floor**: Configurable horizontal floor pattern (default 5x5)
+  - **Pillar**: Configurable vertical pillar (default 5H)
+  - **Line**: Configurable horizontal line (default 5H, rotatable: East-West ↔ North-South)
+- **Dynamic Pattern Sizing**: All pattern sizes can be changed at runtime (1-50 blocks)
 - **Pattern Switching**: Cycle through patterns with mouse wheel
 - **Extended Reach**: Configurable reach distance (1-10 blocks) for both preview and placement
 - **Client-side Only**: Minimal performance impact with client-side rendering
