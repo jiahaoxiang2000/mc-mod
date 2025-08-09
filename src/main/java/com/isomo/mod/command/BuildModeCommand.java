@@ -1,8 +1,10 @@
 package com.isomo.mod.command;
 
 import com.isomo.mod.config.BuildModeConfig;
+import com.isomo.mod.client.BuildModeManager;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 
@@ -22,6 +24,7 @@ import net.minecraft.network.chat.Component;
  *   <li>/buildmode color [preset] - Set wireframe color using presets</li>
  *   <li>/buildmode color [r] [g] [b] [a] - Set custom RGBA color</li>
  *   <li>/buildmode reach [distance] - Set preview reach distance</li>
+ *   <li>/buildmode rotation [0-3] - Set pattern rotation (0°, 90°, 180°, 270°)</li>
  *   <li>/buildmode info - Display current configuration</li>
  * </ul>
  * 
@@ -58,6 +61,9 @@ public class BuildModeCommand {
             .then(Commands.literal("reach")
                 .then(Commands.argument("distance", FloatArgumentType.floatArg(1.0f, 128.0f))
                     .executes(BuildModeCommand::setReachDistance)))
+            .then(Commands.literal("rotation")
+                .then(Commands.argument("angle", IntegerArgumentType.integer(0, 3))
+                    .executes(BuildModeCommand::setRotation)))
             .then(Commands.literal("info")
                 .executes(BuildModeCommand::showInfo))
         );
@@ -126,6 +132,27 @@ public class BuildModeCommand {
     }
     
     /**
+     * Sets the pattern rotation angle.
+     * 
+     * @param context the command execution context
+     * @return command execution result code
+     */
+    private static int setRotation(CommandContext<CommandSourceStack> context) {
+        int rotation = IntegerArgumentType.getInteger(context, "angle");
+        
+        BuildModeManager manager = BuildModeManager.getInstance();
+        manager.setCurrentRotation(rotation);
+        
+        String rotationDesc = manager.getRotationDescription();
+        String patternName = manager.getCurrentPattern().getName();
+        
+        context.getSource().sendSuccess(() -> 
+            Component.literal("Pattern rotation set to " + rotationDesc + " for " + patternName), false);
+        
+        return 1;
+    }
+    
+    /**
      * Displays current build mode configuration information.
      * 
      * @param context the command execution context
@@ -133,6 +160,7 @@ public class BuildModeCommand {
      */
     private static int showInfo(CommandContext<CommandSourceStack> context) {
         BuildModeConfig config = BuildModeConfig.getInstance();
+        BuildModeManager manager = BuildModeManager.getInstance();
         float[] color = config.getWireframeColor();
         
         context.getSource().sendSuccess(() -> 
@@ -144,6 +172,15 @@ public class BuildModeCommand {
         
         context.getSource().sendSuccess(() -> 
             Component.literal("Reach Distance: " + config.getReachDistance() + " blocks"), false);
+        
+        context.getSource().sendSuccess(() -> 
+            Component.literal("Current Pattern: " + manager.getCurrentPattern().getName()), false);
+        
+        context.getSource().sendSuccess(() -> 
+            Component.literal("Current Rotation: " + manager.getRotationDescription()), false);
+        
+        context.getSource().sendSuccess(() -> 
+            Component.literal("Build Mode Active: " + (manager.isBuildModeActive() ? "Yes" : "No")), false);
         
         context.getSource().sendSuccess(() -> 
             Component.literal("Pattern Names: " + (config.isShowPatternName() ? "Enabled" : "Disabled")), false);

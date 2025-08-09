@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### ✨ Added
 
+- **Pattern Rotation System** - Rotate build patterns by 90° using the 'R' key!
+  - **'R' Key Binding**: Rotate current pattern clockwise (0° → 90° → 180° → 270° → back to 0°)
+  - **Smart Rotation Logic**: Automatically applies appropriate rotation to each pattern type
+  - **Visual Feedback**: Shows pattern name and rotation angle in action bar
+  - **Command Support**: `/buildmode rotation [0-3]` to set specific rotation angles
+  - **Rotation State Management**: Rotation persists until pattern change (resets to 0° on pattern switch)
 - **Runtime Configuration System** - Change wireframe colors and settings without restarting!
   - `/buildmode color [preset]` command to change to predefined colors (blue, green, yellow, purple, cyan, white)
   - `/buildmode color [r] [g] [b] [a]` command to set custom RGBA wireframe colors

@@ -2,6 +2,7 @@ package com.isomo.mod.building;
 
 import net.minecraft.core.BlockPos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -75,4 +76,68 @@ public interface BuildPattern {
      * @return a descriptive explanation of this pattern, never null or empty
      */
     String getDescription();
+    
+    /**
+     * Calculates all block positions for this pattern with rotation applied.
+     * 
+     * <p>This method applies 90-degree rotation steps around the Y-axis to the
+     * pattern before calculating positions. Each rotation step represents a
+     * 90-degree clockwise rotation when viewed from above.
+     * 
+     * <p>Rotation steps:
+     * <ul>
+     *   <li>0 = No rotation (original orientation)</li>
+     *   <li>1 = 90° clockwise rotation</li>
+     *   <li>2 = 180° rotation</li>
+     *   <li>3 = 270° clockwise rotation (90° counter-clockwise)</li>
+     * </ul>
+     * 
+     * <p>Default implementation calls {@link #getPositions(BlockPos)} and applies
+     * rotation transformation. Patterns that don't benefit from rotation (like
+     * single blocks or symmetric patterns) may override this to optimize performance.
+     * 
+     * @param center the center point around which to build the pattern
+     * @param rotations number of 90-degree rotation steps (0-3, wraps around)
+     * @return a list of absolute block positions for this rotated pattern, never null
+     * @throws IllegalArgumentException if center is null
+     */
+    default List<BlockPos> getRotatedPositions(BlockPos center, int rotations) {
+        if (center == null) {
+            throw new IllegalArgumentException("Center position cannot be null");
+        }
+        
+        // Normalize rotations to 0-3 range
+        int normalizedRotations = ((rotations % 4) + 4) % 4;
+        
+        // No rotation needed
+        if (normalizedRotations == 0) {
+            return getPositions(center);
+        }
+        
+        // Get base positions and apply rotation
+        List<BlockPos> basePositions = getPositions(center);
+        List<BlockPos> rotatedPositions = new ArrayList<>();
+        
+        for (BlockPos pos : basePositions) {
+            // Calculate relative position from center
+            int relativeX = pos.getX() - center.getX();
+            int relativeZ = pos.getZ() - center.getZ();
+            int relativeY = pos.getY() - center.getY();
+            
+            // Apply rotation around Y-axis
+            int newX = relativeX;
+            int newZ = relativeZ;
+            
+            for (int i = 0; i < normalizedRotations; i++) {
+                int tempX = newX;
+                newX = -newZ;  // 90° clockwise rotation: (x,z) → (-z,x)
+                newZ = tempX;
+            }
+            
+            // Convert back to absolute position
+            rotatedPositions.add(center.offset(newX, relativeY, newZ));
+        }
+        
+        return rotatedPositions;
+    }
 }

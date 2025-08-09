@@ -7,15 +7,16 @@ A Minecraft Forge mod for Minecraft 1.20.1 that provides a comprehensive toolbox
 ### Build Mode System
 - **Toggle Build Mode**: Press 'B' to activate/deactivate wireframe preview mode
 - **Real-time Wireframes**: Configurable colored wireframe previews follow your cursor for precise building
+- **Pattern Rotation**: Press 'R' to rotate patterns by 90° (clockwise: 0° → 90° → 180° → 270°)
 - **Extended Block Placement**: Place blocks at the same distance as wireframe previews (beyond vanilla reach)
 - **Pattern-Based Placement**: Place entire patterns with a single right-click
 - **Runtime Configuration**: Change colors and settings instantly without restarting the client
 - **Multiple Build Patterns**: Choose from 5 different building patterns:
   - **Single Block**: Precise single-block placement
-  - **Wall 3x3**: 3x3 vertical wall pattern
+  - **Wall 3x3**: 3x3 vertical wall pattern (rotatable)
   - **Floor 5x5**: 5x5 horizontal floor pattern  
   - **Pillar 5H**: 5-block high vertical pillar
-  - **Line H5**: 5-block horizontal line
+  - **Line H5**: 5-block horizontal line (rotatable: East-West ↔ North-South)
 - **Pattern Switching**: Cycle through patterns with mouse wheel
 - **Extended Reach**: Configurable reach distance (1-10 blocks) for both preview and placement
 - **Client-side Only**: Minimal performance impact with client-side rendering
@@ -35,6 +36,7 @@ A Minecraft Forge mod for Minecraft 1.20.1 that provides a comprehensive toolbox
 ## Controls
 
 - **B Key**: Toggle build mode on/off (configurable in controls menu)
+- **R Key**: Rotate current pattern by 90° clockwise (when in build mode)
 - **Mouse Wheel**: Switch between build patterns (when in build mode)
 
 ## Commands
@@ -42,6 +44,7 @@ A Minecraft Forge mod for Minecraft 1.20.1 that provides a comprehensive toolbox
 - **`/buildmode color [preset]`**: Change wireframe color using presets (blue, green, yellow, purple, cyan, white)
 - **`/buildmode color [r] [g] [b] [a]`**: Set custom RGBA wireframe color (values 0.0-1.0)
 - **`/buildmode reach [distance]`**: Set preview reach distance (1-10 blocks)
+- **`/buildmode rotation [0-3]`**: Set pattern rotation (0=0°, 1=90°, 2=180°, 3=270°)
 - **`/buildmode info`**: Display current configuration settings
 
 All configuration changes take effect immediately without requiring a client restart!

@@ -40,6 +40,9 @@ public class BuildModeManager {
     /** The currently selected build pattern */
     private BuildPattern currentPattern = BuildPatterns.SINGLE_BLOCK;
     
+    /** The current rotation state (0-3, representing 0°, 90°, 180°, 270°) */
+    private int currentRotation = 0;
+    
     /** The world position where previews should be shown */
     private BlockPos previewPosition = BlockPos.ZERO;
     
@@ -101,7 +104,10 @@ public class BuildModeManager {
     }
     
     /**
-     * Sets the current build pattern.
+     * Sets the current build pattern and resets rotation.
+     * 
+     * <p>When switching patterns, the rotation is reset to 0 degrees to provide
+     * a consistent starting orientation for the new pattern.
      * 
      * @param pattern the BuildPattern to use for future previews
      * @throws IllegalArgumentException if pattern is null
@@ -111,6 +117,7 @@ public class BuildModeManager {
             throw new IllegalArgumentException("Build pattern cannot be null");
         }
         this.currentPattern = pattern;
+        this.currentRotation = 0; // Reset rotation when changing patterns
     }
     
     /**
@@ -137,14 +144,14 @@ public class BuildModeManager {
     /**
      * Gets all block positions that should be previewed with wireframes.
      * 
-     * <p>This method applies the current build pattern to the preview position
-     * to generate a list of all BlockPos locations where wireframes should
-     * be rendered.
+     * <p>This method applies the current build pattern and rotation to the preview
+     * position to generate a list of all BlockPos locations where wireframes should
+     * be rendered. The rotation is applied according to the current rotation state.
      * 
-     * @return a list of BlockPos locations for wireframe rendering
+     * @return a list of BlockPos locations for wireframe rendering with rotation applied
      */
     public List<BlockPos> getPreviewPositions() {
-        return currentPattern.getPositions(previewPosition);
+        return currentPattern.getRotatedPositions(previewPosition, currentRotation);
     }
     
     /**
@@ -156,6 +163,7 @@ public class BuildModeManager {
      * 
      * <p>This method is typically called in response to user input for pattern
      * switching, such as mouse wheel scrolling or keyboard shortcuts.
+     * Rotation is reset to 0 degrees when changing patterns.
      * 
      * @see BuildPatterns#getNext(BuildPattern)
      * @see #previousPattern()
@@ -163,6 +171,7 @@ public class BuildModeManager {
      */
     public void nextPattern() {
         currentPattern = BuildPatterns.getNext(currentPattern);
+        currentRotation = 0; // Reset rotation when changing patterns
     }
     
     /**
@@ -170,8 +179,61 @@ public class BuildModeManager {
      * 
      * <p>Cycles through available patterns in reverse order.
      * When the first pattern is reached, wraps around to the last pattern.
+     * Rotation is reset to 0 degrees when changing patterns.
      */
     public void previousPattern() {
         currentPattern = BuildPatterns.getPrevious(currentPattern);
+        currentRotation = 0; // Reset rotation when changing patterns
+    }
+    
+    /**
+     * Gets the current rotation state.
+     * 
+     * @return rotation value (0-3) representing 0°, 90°, 180°, 270°
+     */
+    public int getCurrentRotation() {
+        return currentRotation;
+    }
+    
+    /**
+     * Sets the current rotation state.
+     * 
+     * @param rotation rotation value (0-3) representing 0°, 90°, 180°, 270°
+     */
+    public void setCurrentRotation(int rotation) {
+        this.currentRotation = ((rotation % 4) + 4) % 4; // Normalize to 0-3 range
+    }
+    
+    /**
+     * Rotates the current pattern by 90 degrees clockwise.
+     * 
+     * <p>This method advances the rotation state by one step (90 degrees).
+     * After reaching 270 degrees, the next rotation wraps back to 0 degrees.
+     * 
+     * <p>Rotation steps:
+     * <ul>
+     *   <li>0° → 90° → 180° → 270° → (back to 0°)</li>
+     * </ul>
+     * 
+     * @return the new rotation value (0-3) after rotation
+     */
+    public int rotatePattern() {
+        currentRotation = (currentRotation + 1) % 4;
+        return currentRotation;
+    }
+    
+    /**
+     * Gets a human-readable rotation description.
+     * 
+     * @return rotation description like "0°", "90°", "180°", "270°"
+     */
+    public String getRotationDescription() {
+        return switch (currentRotation) {
+            case 0 -> "0°";
+            case 1 -> "90°";
+            case 2 -> "180°";
+            case 3 -> "270°";
+            default -> "0°"; // Fallback, should never happen
+        };
     }
 }

@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.Mod;
  * <p>Currently supports:
  * <ul>
  *   <li>Build Mode Toggle - Default key 'B' to enter/exit build mode</li>
+ *   <li>Pattern Rotate - Default key 'R' to rotate current build pattern by 90°</li>
  * </ul>
  * 
  * @author isomo
@@ -44,6 +45,23 @@ public class KeyBindings {
     );
     
     /**
+     * Key mapping for rotating the current build pattern.
+     * 
+     * <p>Default binding: R key (GLFW_KEY_R)
+     * <p>Category: "Isomo Mod" - appears in controls menu under this category
+     * <p>Localization key: "key.isomomod.pattern_rotate"
+     * 
+     * <p>When pressed in build mode, this key rotates the current pattern by 90
+     * degrees clockwise around the Y-axis. Rotations cycle through 0°, 90°, 180°,
+     * and 270° orientations. This only works when build mode is active.
+     */
+    public static final KeyMapping PATTERN_ROTATE = new KeyMapping(
+        "key.isomomod.pattern_rotate",
+        GLFW.GLFW_KEY_R,
+        "key.categories.isomomod"
+    );
+    
+    /**
      * Registers all key mappings with Forge's key binding system.
      * 
      * <p>This method is automatically called during mod initialization
@@ -56,5 +74,6 @@ public class KeyBindings {
     @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(BUILD_MODE_TOGGLE);
+        event.register(PATTERN_ROTATE);
     }
 }

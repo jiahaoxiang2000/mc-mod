@@ -112,15 +112,31 @@ public class ClientEventHandler {
             return;
         }
         
+        BuildModeManager manager = BuildModeManager.getInstance();
+        
         // Handle build mode toggle
         if (KeyBindings.BUILD_MODE_TOGGLE.consumeClick()) {
-            BuildModeManager.getInstance().toggleBuildMode();
+            manager.toggleBuildMode();
             
-            String status = BuildModeManager.getInstance().isBuildModeActive() ? "ON" : "OFF";
+            String status = manager.isBuildModeActive() ? "ON" : "OFF";
             minecraft.player.displayClientMessage(
                 net.minecraft.network.chat.Component.literal("Build Mode: " + status), 
                 true
             );
+        }
+        
+        // Handle pattern rotation (only when build mode is active)
+        if (KeyBindings.PATTERN_ROTATE.consumeClick()) {
+            if (manager.isBuildModeActive()) {
+                int newRotation = manager.rotatePattern();
+                String rotationDesc = manager.getRotationDescription();
+                String patternName = manager.getCurrentPattern().getName();
+                
+                minecraft.player.displayClientMessage(
+                    net.minecraft.network.chat.Component.literal(patternName + " (" + rotationDesc + ")"), 
+                    true
+                );
+            } 
         }
     }
     
