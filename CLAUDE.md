@@ -64,11 +64,3 @@ The mod uses Forge's DeferredRegister system for registering content:
 The codebase currently includes example implementations for blocks, items, and creative mode tabs that serve as templates for new content.
 
 Configuration is handled through Forge's config system with automatic file generation and validation.
-
-## Development Notes
-
-- The project uses Java 17 as required by Minecraft 1.20.1
-- Mappings are set to "official" Mojang mappings
-- Chinese Maven mirrors are configured for faster dependency downloads
-- The working directory for run configurations is `run/`
-- Generated resources from data generators are included in the build
