@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🐛 Fixed
 
 - Fixed RegisterClientCommandsEvent registration error by moving to Forge event bus instead of Mod event bus
+- Fixed ClientEventHandler to use configurable reach distance from BuildModeConfig instead of hardcoded constant
 
 ### 📚 Documentation
 

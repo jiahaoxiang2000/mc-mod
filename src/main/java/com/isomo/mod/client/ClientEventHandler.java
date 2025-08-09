@@ -1,6 +1,7 @@
 package com.isomo.mod.client;
 
 import com.isomo.mod.client.renderer.WireframeRenderer;
+import com.isomo.mod.config.BuildModeConfig;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -40,9 +41,6 @@ import net.minecraftforge.fml.common.Mod;
  */
 @Mod.EventBusSubscriber(modid = "isomomod", bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEventHandler {
-    
-    /** Maximum reach distance for build preview ray tracing (in blocks) */
-    private static final double PREVIEW_REACH_DISTANCE = 5.0;
     
     /**
      * Handles key input events from the player.
@@ -134,7 +132,7 @@ public class ClientEventHandler {
      * <ul>
      *   <li>Start point: Player's eye position</li>
      *   <li>Direction: Player's look vector</li>
-     *   <li>Max distance: {@value #PREVIEW_REACH_DISTANCE} blocks</li>
+     *   <li>Max distance: Configurable via BuildModeConfig (default 5.0 blocks)</li>
      *   <li>Target: Block outlines only (no fluids)</li>
      * </ul>
      * 
@@ -150,10 +148,13 @@ public class ClientEventHandler {
             return;
         }
         
+        // Get configurable reach distance
+        double reachDistance = BuildModeConfig.getInstance().getReachDistance();
+        
         // Perform ray trace to find where player is looking
         Vec3 eyePosition = player.getEyePosition();
         Vec3 lookVector = player.getViewVector(1.0F);
-        Vec3 endPosition = eyePosition.add(lookVector.scale(PREVIEW_REACH_DISTANCE));
+        Vec3 endPosition = eyePosition.add(lookVector.scale(reachDistance));
         
         ClipContext clipContext = new ClipContext(
             eyePosition,
