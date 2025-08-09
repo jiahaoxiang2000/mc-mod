@@ -11,6 +11,7 @@ A Minecraft Forge mod for Minecraft 1.20.1 that provides a comprehensive toolbox
   - Rotation persists when switching between patterns
 - **Extended Block Placement**: Place blocks at the same distance as wireframe previews (beyond vanilla reach)
 - **Pattern-Based Placement**: Place entire patterns with a single right-click
+- **Pattern-Based Deletion**: Delete blocks using the same patterns with left-click
 - **Runtime Configuration**: Change colors and settings instantly without restarting the client
 - **Multiple Build Patterns**: Choose from 5 different configurable building patterns:
   - **Single Block**: Precise single-block placement
@@ -39,6 +40,8 @@ A Minecraft Forge mod for Minecraft 1.20.1 that provides a comprehensive toolbox
 
 - **B Key**: Toggle build mode on/off (configurable in controls menu)
 - **R Key**: Rotate current pattern by 90° clockwise (when in build mode)
+- **Right-Click**: Place blocks according to current pattern (at adjacent position)
+- **Left-Click**: Delete blocks according to current pattern (at direct hit position)
 - **Mouse Wheel**: Switch between build patterns (when in build mode)
 
 ## Commands

@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### ✨ Added
 
+- **Left-Click Block Deletion** - Delete blocks using the same patterns as placement!
+  - **Left-click functionality**: Delete blocks at the direct hit position (not adjacent)
+  - **Pattern-based deletion**: Remove blocks according to current build pattern shape
+  - **Smart validation**: Prevents deletion of unbreakable blocks like bedrock
+  - **Consistent behavior**: Same rotation and pattern logic as placement
+  - **Drop handling**: Deleted blocks drop as items (in survival mode)
 - **Configurable Pattern Sizes** - Change pattern sizes dynamically without hardcoding!
   - **`/buildmode size wall [width] [height]`**: Configure wall pattern dimensions (1-50 blocks)
   - **`/buildmode size floor [width] [depth]`**: Configure floor pattern dimensions (1-50 blocks)

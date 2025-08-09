@@ -49,30 +49,37 @@ import net.minecraftforge.fml.common.Mod;
 public class BlockPlacementHandler {
     
     /**
-     * Handles mouse click events for extended reach block placement.
+     * Handles mouse click events for extended reach block placement and deletion.
      * 
-     * <p>This method intercepts right-click events when build mode is active
-     * and extends the placement reach to match the preview reach distance.
-     * It performs ray tracing using the same logic as preview positioning
-     * to find valid placement locations.
+     * <p>This method intercepts both right-click and left-click events when build mode is active:
+     * <ul>
+     *   <li><strong>Right-click</strong>: Places blocks at adjacent position (hit block + face direction)</li>
+     *   <li><strong>Left-click</strong>: Deletes blocks at direct hit position (no offset)</li>
+     * </ul>
      * 
-     * <p>The placement process:
+     * <p>Both actions extend reach to match the preview reach distance and apply
+     * the current build pattern shape.
+     * 
+     * <p>The placement/deletion process:
      * <ol>
-     *   <li>Check if build mode is active and player holds a block item</li>
+     *   <li>Check if build mode is active</li>
      *   <li>Perform ray trace to find target position at extended reach</li>
-     *   <li>Verify target position matches current preview positions</li>
-     *   <li>Place blocks according to current build pattern</li>
-     *   <li>Consume appropriate number of items from inventory</li>
+     *   <li>Calculate pattern positions based on action type (adjacent vs direct)</li>
+     *   <li>Execute blocks placement or deletion according to current build pattern</li>
+     *   <li>Handle inventory changes (consume items or add drops)</li>
      * </ol>
      * 
      * @param event the mouse input event containing click information
      */
     @SubscribeEvent
     public static void onMouseClick(InputEvent.MouseButton event) {
-        // Only handle right-click events
-        if (event.getButton() != 1 || event.getAction() != 1) {
+        // Handle both right-click (1) and left-click (0) events
+        if ((event.getButton() != 1 && event.getButton() != 0) || event.getAction() != 1) {
             return;
         }
+        
+        boolean isRightClick = event.getButton() == 1;
+        boolean isLeftClick = event.getButton() == 0;
         
         Minecraft minecraft = Minecraft.getInstance();
         LocalPlayer player = minecraft.player;
@@ -84,17 +91,20 @@ public class BlockPlacementHandler {
         
         BuildModeManager buildManager = BuildModeManager.getInstance();
         
-        // Only handle placement when build mode is active
+        // Only handle actions when build mode is active
         if (!buildManager.isBuildModeActive()) {
             return;
         }
         
         ItemStack heldItem = player.getMainHandItem();
         
-        // Only handle block items
-        if (!(heldItem.getItem() instanceof BlockItem blockItem)) {
+        // For right-click placement, only handle block items
+        if (isRightClick && !(heldItem.getItem() instanceof BlockItem blockItem)) {
             return;
         }
+        
+        // For left-click deletion, we don't need to check held item
+        BlockItem blockItem = (heldItem.getItem() instanceof BlockItem) ? (BlockItem) heldItem.getItem() : null;
         
         // Get configurable reach distance
         BuildModeConfig config = BuildModeConfig.getInstance();
@@ -120,6 +130,29 @@ public class BlockPlacementHandler {
             return;
         }
         
+        if (isRightClick) {
+            // Handle block placement (existing logic)
+            handleBlockPlacement(event, level, player, buildManager, blockItem, hitResult, heldItem);
+        } else if (isLeftClick) {
+            // Handle block deletion (new logic)
+            handleBlockDeletion(event, level, player, buildManager, hitResult);
+        }
+    }
+    
+    /**
+     * Handles right-click block placement logic.
+     * 
+     * @param event the mouse input event
+     * @param level the world level
+     * @param player the player performing the action
+     * @param buildManager the build mode manager instance
+     * @param blockItem the block item to place
+     * @param hitResult the ray trace hit result
+     * @param heldItem the item stack being held
+     */
+    private static void handleBlockPlacement(InputEvent.MouseButton event, Level level, LocalPlayer player,
+                                           BuildModeManager buildManager, BlockItem blockItem, 
+                                           BlockHitResult hitResult, ItemStack heldItem) {
         // Get the placement position (adjacent to hit block)
         BlockPos placementPos = hitResult.getBlockPos().relative(hitResult.getDirection());
         
@@ -147,6 +180,38 @@ public class BlockPlacementHandler {
         // Consume items from inventory based on blocks placed
         if (blocksPlaced > 0 && !player.getAbilities().instabuild) {
             heldItem.shrink(blocksPlaced);
+        }
+    }
+    
+    /**
+     * Handles left-click block deletion logic.
+     * 
+     * @param event the mouse input event
+     * @param level the world level
+     * @param player the player performing the action
+     * @param buildManager the build mode manager instance
+     * @param hitResult the ray trace hit result
+     */
+    private static void handleBlockDeletion(InputEvent.MouseButton event, Level level, LocalPlayer player,
+                                          BuildModeManager buildManager, BlockHitResult hitResult) {
+        // Get the deletion position (direct hit block, not adjacent)
+        BlockPos deletionPos = hitResult.getBlockPos();
+        
+        // Calculate pattern positions starting from the hit block
+        List<BlockPos> patternPositions = buildManager.getCurrentPattern()
+            .getRotatedPositions(deletionPos, buildManager.getCurrentRotation());
+        
+        // Cancel the event to prevent vanilla block breaking
+        event.setCanceled(true);
+        
+        // Delete blocks at all pattern positions
+        int blocksDeleted = 0;
+        for (BlockPos pos : patternPositions) {
+            if (canDeleteBlockAt(level, pos)) {
+                if (deleteBlockAt(level, pos, player)) {
+                    blocksDeleted++;
+                }
+            }
         }
     }
     
@@ -196,5 +261,56 @@ public class BlockPlacementHandler {
         InteractionResult result = blockItem.place(context);
         
         return result.consumesAction();
+    }
+    
+    /**
+     * Checks if a block can be deleted at the specified position.
+     * 
+     * <p>This method verifies that the target position contains a block
+     * that can be safely deleted, excluding protected blocks like bedrock.
+     * 
+     * @param level the world level
+     * @param pos the position to check
+     * @return true if the block can be deleted at this position
+     */
+    private static boolean canDeleteBlockAt(Level level, BlockPos pos) {
+        var blockState = level.getBlockState(pos);
+        
+        // Don't delete air blocks
+        if (blockState.isAir()) {
+            return false;
+        }
+        
+        // Don't delete bedrock or other unbreakable blocks
+        if (blockState.getDestroySpeed(level, pos) < 0) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Deletes a block at the specified position.
+     * 
+     * <p>This method handles the actual block deletion logic, including
+     * dropping items and triggering appropriate block breaking effects.
+     * 
+     * @param level the world level
+     * @param pos the position to delete the block from
+     * @param player the player performing the deletion
+     * @return true if the block was successfully deleted
+     */
+    private static boolean deleteBlockAt(Level level, BlockPos pos, LocalPlayer player) {
+        var blockState = level.getBlockState(pos);
+        
+        // Remove the block
+        boolean success = level.removeBlock(pos, false);
+        
+        if (success && !player.getAbilities().instabuild) {
+            // Drop the block as an item (client-side, items will be handled by server)
+            blockState.getBlock().playerWillDestroy(level, pos, blockState, player);
+        }
+        
+        return success;
     }
 }
