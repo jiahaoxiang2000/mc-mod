@@ -4,8 +4,55 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Minecraft Forge mod project targeting Minecraft 1.20.1 with Forge 47.4.6. The mod is currently named "Isomo Mod" and provides a toolbox of functionality.
+This is a Minecraft Forge mod project targeting Minecraft 1.20.1 with Forge 47.4.6. The mod is named "Isomo Mod" and provides a comprehensive toolbox of building functionality with an intuitive build mode system.
 
-## Code style
+## Code Style Guidelines
 
-- the code finish need to update the @changelog.txt & supply the doc comment
+### Documentation Requirements
+
+- **Javadoc Comments**: All public classes, methods, and fields MUST have comprehensive Javadoc documentation
+- **Parameter Documentation**: Use `@param` for all method parameters
+- **Return Documentation**: Use `@return` for all non-void methods
+- **Exception Documentation**: Use `@throws` for declared exceptions
+- **Author/Version**: Include `@author` and `@since` tags on class-level documentation
+- **Cross-references**: Use `@see` tags to link related methods and classes
+
+### File Organization
+
+- **Package Structure**:
+  - `building/` - Build pattern definitions and interfaces
+  - `client/` - Client-side managers and handlers
+  - `event/` - Event handling system
+- **Naming Conventions**: Use descriptive, self-documenting names
+
+### Completion Requirements
+
+When finishing code changes, you MUST:
+
+1. **Update changelog.txt**: Add detailed entry for new features/changes following the existing format
+2. **Update README.md**: Reflect any new functionality or changes in the README
+3. **Comprehensive Documentation**: Ensure all new code has complete Javadoc comments
+4. **Cross-Reference**: Add appropriate `@see` tags to link related functionality
+5. **Validation**: Include proper null checking and parameter validation
+
+### Example Documentation Style
+
+```java
+/**
+ * Advances to the next build pattern in the sequence.
+ *
+ * <p>Cycles through available patterns in a predefined order:
+ * Single Block → Wall 3x3 → Floor 5x5 → Pillar 5H → Line H5 → (back to Single Block)
+ * When the last pattern is reached, wraps around to the first pattern.
+ *
+ * <p>This method is typically called in response to user input for pattern
+ * switching, such as mouse wheel scrolling or keyboard shortcuts.
+ *
+ * @see BuildPatterns#getNext(BuildPattern)
+ * @see #previousPattern()
+ * @see #getCurrentPattern()
+ */
+public void nextPattern() {
+    currentPattern = BuildPatterns.getNext(currentPattern);
+}
+```
