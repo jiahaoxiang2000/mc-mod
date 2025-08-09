@@ -8,6 +8,7 @@ A Minecraft Forge mod for Minecraft 1.20.1 that provides a comprehensive toolbox
 - **Toggle Build Mode**: Press 'B' to activate/deactivate wireframe preview mode
 - **Real-time Wireframes**: Configurable colored wireframe previews follow your cursor for precise building
 - **Pattern Rotation**: Press 'R' to rotate patterns by 90° (clockwise: 0° → 90° → 180° → 270°)
+  - Rotation persists when switching between patterns
 - **Extended Block Placement**: Place blocks at the same distance as wireframe previews (beyond vanilla reach)
 - **Pattern-Based Placement**: Place entire patterns with a single right-click
 - **Runtime Configuration**: Change colors and settings instantly without restarting the client

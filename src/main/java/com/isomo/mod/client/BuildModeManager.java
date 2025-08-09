@@ -104,10 +104,10 @@ public class BuildModeManager {
     }
     
     /**
-     * Sets the current build pattern and resets rotation.
+     * Sets the current build pattern while preserving rotation.
      * 
-     * <p>When switching patterns, the rotation is reset to 0 degrees to provide
-     * a consistent starting orientation for the new pattern.
+     * <p>The rotation state is maintained when switching patterns, allowing
+     * players to keep their preferred orientation across different pattern types.
      * 
      * @param pattern the BuildPattern to use for future previews
      * @throws IllegalArgumentException if pattern is null
@@ -117,7 +117,7 @@ public class BuildModeManager {
             throw new IllegalArgumentException("Build pattern cannot be null");
         }
         this.currentPattern = pattern;
-        this.currentRotation = 0; // Reset rotation when changing patterns
+        // Rotation is preserved when changing patterns
     }
     
     /**
@@ -163,7 +163,7 @@ public class BuildModeManager {
      * 
      * <p>This method is typically called in response to user input for pattern
      * switching, such as mouse wheel scrolling or keyboard shortcuts.
-     * Rotation is reset to 0 degrees when changing patterns.
+     * The rotation state is preserved when switching patterns.
      * 
      * @see BuildPatterns#getNext(BuildPattern)
      * @see #previousPattern()
@@ -171,7 +171,7 @@ public class BuildModeManager {
      */
     public void nextPattern() {
         currentPattern = BuildPatterns.getNext(currentPattern);
-        currentRotation = 0; // Reset rotation when changing patterns
+        // Rotation is preserved when changing patterns
     }
     
     /**
@@ -179,11 +179,11 @@ public class BuildModeManager {
      * 
      * <p>Cycles through available patterns in reverse order.
      * When the first pattern is reached, wraps around to the last pattern.
-     * Rotation is reset to 0 degrees when changing patterns.
+     * The rotation state is preserved when switching patterns.
      */
     public void previousPattern() {
         currentPattern = BuildPatterns.getPrevious(currentPattern);
-        currentRotation = 0; // Reset rotation when changing patterns
+        // Rotation is preserved when changing patterns
     }
     
     /**
