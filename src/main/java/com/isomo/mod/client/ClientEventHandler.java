@@ -43,6 +43,56 @@ import net.minecraftforge.fml.common.Mod;
 public class ClientEventHandler {
     
     /**
+     * Handles mouse scroll events for pattern switching in build mode.
+     * 
+     * <p>When build mode is active, this method intercepts mouse wheel scrolling
+     * to cycle through available build patterns. Scrolling up advances to the
+     * next pattern, while scrolling down goes to the previous pattern.
+     * 
+     * <p>The event is canceled to prevent normal scrolling behavior (like
+     * hotbar selection) when build mode is active, ensuring pattern switching
+     * takes precedence.
+     * 
+     * @param event the mouse scroll event containing scroll direction
+     */
+    @SubscribeEvent
+    public static void onMouseScroll(InputEvent.MouseScrollingEvent event) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.level == null || minecraft.player == null) {
+            return;
+        }
+        
+        BuildModeManager manager = BuildModeManager.getInstance();
+        
+        // Only handle scrolling when build mode is active
+        if (!manager.isBuildModeActive()) {
+            return;
+        }
+        
+        // Cancel the event to prevent normal hotbar scrolling
+        event.setCanceled(true);
+        
+        double scrollDelta = event.getScrollDelta();
+        
+        if (scrollDelta > 0) {
+            // Scroll up - next pattern
+            manager.nextPattern();
+        } else if (scrollDelta < 0) {
+            // Scroll down - previous pattern
+            manager.previousPattern();
+        }
+        
+        // Display current pattern name
+        BuildModeConfig config = BuildModeConfig.getInstance();
+        if (config.isShowPatternName()) {
+            minecraft.player.displayClientMessage(
+                net.minecraft.network.chat.Component.literal("Pattern: " + manager.getCurrentPattern().getName()), 
+                true
+            );
+        }
+    }
+    
+    /**
      * Handles key input events from the player.
      * 
      * <p>This method processes all key press events and specifically handles

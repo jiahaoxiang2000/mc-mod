@@ -7,6 +7,8 @@ A Minecraft Forge mod for Minecraft 1.20.1 that provides a comprehensive toolbox
 ### Build Mode System
 - **Toggle Build Mode**: Press 'B' to activate/deactivate wireframe preview mode
 - **Real-time Wireframes**: Configurable colored wireframe previews follow your cursor for precise building
+- **Extended Block Placement**: Place blocks at the same distance as wireframe previews (beyond vanilla reach)
+- **Pattern-Based Placement**: Place entire patterns with a single right-click
 - **Runtime Configuration**: Change colors and settings instantly without restarting the client
 - **Multiple Build Patterns**: Choose from 5 different building patterns:
   - **Single Block**: Precise single-block placement
@@ -14,8 +16,8 @@ A Minecraft Forge mod for Minecraft 1.20.1 that provides a comprehensive toolbox
   - **Floor 5x5**: 5x5 horizontal floor pattern  
   - **Pillar 5H**: 5-block high vertical pillar
   - **Line H5**: 5-block horizontal line
-- **Pattern Switching**: Cycle through patterns seamlessly
-- **Extended Reach**: 5-block reach distance for preview placement
+- **Pattern Switching**: Cycle through patterns with mouse wheel
+- **Extended Reach**: Configurable reach distance (1-10 blocks) for both preview and placement
 - **Client-side Only**: Minimal performance impact with client-side rendering
 
 ## Requirements

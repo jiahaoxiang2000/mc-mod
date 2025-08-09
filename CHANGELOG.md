@@ -15,6 +15,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `/buildmode reach [distance]` command to adjust preview reach distance (1-10 blocks)
   - `/buildmode info` command to display current configuration settings
   - All changes take effect immediately without client restart
+- **Extended Block Placement** - Place blocks at the same distance as wireframe previews!
+  - **BlockPlacementHandler** enables placing blocks beyond vanilla reach distance
+  - Automatic pattern-based placement - place entire patterns with one click
+  - Matches configurable reach distance from BuildModeConfig
+- **Mouse Wheel Pattern Switching** - Scroll to cycle through build patterns when build mode is active
+  - Scroll up for next pattern, scroll down for previous pattern
+  - Prevents normal hotbar scrolling when build mode is active
+  - Optional pattern name display in action bar
 - **BuildModeConfig** singleton class for managing runtime settings
 - **BuildModeCommand** class providing comprehensive command system
 - Auto-completion support for color preset commands
