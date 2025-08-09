@@ -39,6 +39,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated project structure to include `config/` and `command/` packages
 - Migrated from changelog.txt to modern CHANGELOG.md format
 
+### 🐛 Fixed
+
+- Fixed RegisterClientCommandsEvent registration error by moving to Forge event bus instead of Mod event bus
+
 ### 📚 Documentation
 
 - Updated README.md with new commands and configuration options

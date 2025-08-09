@@ -128,7 +128,12 @@ public class IsomoMod
             // Initialize build mode system
             LOGGER.info("Initializing Build Mode System");
         }
-        
+    }
+    
+    // Forge event bus subscriber for client events
+    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+    public static class ClientForgeEvents
+    {
         @SubscribeEvent
         public static void registerClientCommands(RegisterClientCommandsEvent event) {
             BuildModeCommand.register(event.getDispatcher());
