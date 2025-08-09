@@ -149,8 +149,8 @@ public class BuildModeConfig {
      * @throws IllegalArgumentException if distance is outside valid range
      */
     public void setReachDistance(double distance) {
-        if (distance < 1.0 || distance > 10.0) {
-            throw new IllegalArgumentException("Reach distance must be between 1.0 and 10.0 blocks");
+        if (distance < 1.0 || distance > 128.0) {
+            throw new IllegalArgumentException("Reach distance must be between 1.0 and 128.0 blocks");
         }
         this.reachDistance = distance;
     }

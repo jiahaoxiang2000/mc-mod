@@ -18,10 +18,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.api.distmarker.Dist;
 
 /**
  * Handles extended reach block placement for build mode system.
@@ -117,13 +117,6 @@ public class BlockPlacementHandler {
         
         // Only proceed if we hit a block within extended reach
         if (hitResult.getType() != HitResult.Type.BLOCK) {
-            return;
-        }
-        
-        // Check if the hit position is beyond vanilla reach (approximately 4.5 blocks)
-        double distanceToHit = eyePosition.distanceTo(hitResult.getLocation());
-        if (distanceToHit <= 4.5) {
-            // Let vanilla handle normal reach placement
             return;
         }
         

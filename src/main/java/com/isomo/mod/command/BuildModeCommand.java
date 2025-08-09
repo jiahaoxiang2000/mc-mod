@@ -56,7 +56,7 @@ public class BuildModeCommand {
                             .then(Commands.argument("alpha", FloatArgumentType.floatArg(0.0f, 1.0f))
                                 .executes(BuildModeCommand::setColorCustom))))))
             .then(Commands.literal("reach")
-                .then(Commands.argument("distance", FloatArgumentType.floatArg(1.0f, 10.0f))
+                .then(Commands.argument("distance", FloatArgumentType.floatArg(1.0f, 128.0f))
                     .executes(BuildModeCommand::setReachDistance)))
             .then(Commands.literal("info")
                 .executes(BuildModeCommand::showInfo))
