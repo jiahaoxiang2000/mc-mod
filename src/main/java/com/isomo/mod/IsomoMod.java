@@ -122,6 +122,9 @@ public class IsomoMod
             // Some client setup code
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+            
+            // Initialize build mode system
+            LOGGER.info("Initializing Build Mode System");
         }
     }
 }
