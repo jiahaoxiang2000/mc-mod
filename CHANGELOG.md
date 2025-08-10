@@ -25,6 +25,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.3] - 2025-08-10
+
+### 🔄 Changed
+
+- **GitHub Actions Simplification**: Reverted workflow optimizations to use simpler, more reliable configuration
+  - **JDK Version**: Reverted to JDK 17 for better compatibility
+  - **Caching Strategy**: Reverted to standard Gradle caching approach
+  - **Build Command**: Simplified to basic `./gradlew build` for reliability
+  - **Focus on Stability**: Prioritized reliable builds over advanced optimizations
+
+### ✨ Retained
+
+- **Repository Optimization**: Kept conditional Chinese mirrors fix from v1.1.2 for faster CI builds
+
+---
+
 ## [1.1.2] - 2025-08-10
 
 ### ⚡ Performance
@@ -173,7 +189,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version Links
 
-- [Unreleased]: https://github.com/username/isomo-mod/compare/v1.1.2...HEAD
+- [Unreleased]: https://github.com/username/isomo-mod/compare/v1.1.3...HEAD
+- [1.1.3]: https://github.com/username/isomo-mod/compare/v1.1.2...v1.1.3
 - [1.1.2]: https://github.com/username/isomo-mod/compare/v1.1.1...v1.1.2
 - [1.1.1]: https://github.com/username/isomo-mod/compare/v1.1.0...v1.1.1
 - [1.1.0]: https://github.com/username/isomo-mod/compare/v1.0.0...v1.1.0
