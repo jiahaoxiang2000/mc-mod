@@ -112,10 +112,13 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    // Chinese mirrors for faster downloads
-    maven { url 'https://maven.aliyun.com/repository/central' }
-    maven { url 'https://maven.aliyun.com/repository/jcenter' }
-    maven { url 'https://maven.aliyun.com/repository/public' }
+    // Use Chinese mirrors for local development (faster in China)
+    // but skip them in CI/CD environments for better international performance
+    if (!System.getenv('CI')) {
+        maven { url 'https://maven.aliyun.com/repository/central' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
+    }
     
     // Put repositories for dependencies here
     // ForgeGradle automatically adds the Forge maven and Maven Central for you

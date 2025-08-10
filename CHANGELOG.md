@@ -25,6 +25,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.2] - 2025-08-10
+
+### ⚡ Performance
+
+- **Repository Optimization**: Fixed slow GitHub Actions builds caused by Chinese mirrors
+  - **Conditional Repositories**: Chinese mirrors now only used in local development (when CI environment variable is not set)
+  - **CI Performance**: GitHub Actions now uses default international repositories for faster builds
+  - **Local Development**: Chinese developers still benefit from faster Aliyun mirrors locally
+
+### 🐛 Fixed
+
+- **CI/CD Build Speed**: Resolved extremely slow GitHub Actions builds caused by international access to Chinese Maven mirrors
+
+---
+
 ## [1.1.1] - 2025-08-10
 
 ### ⚡ Performance
@@ -158,7 +173,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version Links
 
-- [Unreleased]: https://github.com/username/isomo-mod/compare/v1.1.1...HEAD
+- [Unreleased]: https://github.com/username/isomo-mod/compare/v1.1.2...HEAD
+- [1.1.2]: https://github.com/username/isomo-mod/compare/v1.1.1...v1.1.2
 - [1.1.1]: https://github.com/username/isomo-mod/compare/v1.1.0...v1.1.1
 - [1.1.0]: https://github.com/username/isomo-mod/compare/v1.0.0...v1.1.0
 - [1.0.0]: https://github.com/username/isomo-mod/releases/tag/v1.0.0
