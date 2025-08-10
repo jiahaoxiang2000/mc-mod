@@ -25,6 +25,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.1] - 2025-08-10
+
+### ⚡ Performance
+
+- **GitHub Actions Optimization**: Significantly improved CI/CD build performance
+  - **Upgraded JDK**: Updated from JDK 17 to JDK 22 for better performance
+  - **Enhanced Gradle Caching**: Replaced manual caching with official gradle/actions/setup-gradle@v3
+  - **Parallel Builds**: Enabled --parallel, --build-cache, and --configuration-cache flags
+  - **Optimized JVM Settings**: Configured 4GB heap and 4 workers for faster builds
+  - **Security**: Added Gradle wrapper validation step
+  - **Cache Management**: Improved cache cleanup for more reliable cache hits
+
+### 🔄 Changed
+
+- **CI/CD Pipeline**: Complete rebuild workflow optimization for faster releases
+
+---
+
 ## [1.1.0] - 2025-08-10
 
 ### 🔄 Changed
@@ -140,7 +158,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version Links
 
-- [Unreleased]: https://github.com/username/isomo-mod/compare/v1.1.0...HEAD
+- [Unreleased]: https://github.com/username/isomo-mod/compare/v1.1.1...HEAD
+- [1.1.1]: https://github.com/username/isomo-mod/compare/v1.1.0...v1.1.1
 - [1.1.0]: https://github.com/username/isomo-mod/compare/v1.0.0...v1.1.0
 - [1.0.0]: https://github.com/username/isomo-mod/releases/tag/v1.0.0
 

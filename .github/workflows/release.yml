@@ -3,41 +3,41 @@ name: Create Release
 on:
   push:
     tags:
-      - 'v*' # Triggers on version tags like v1.0.0, v1.1.0, etc.
+      - "v*" # Triggers on version tags like v1.0.0, v1.1.0, etc.
 
 jobs:
   build-and-release:
     name: Build and Create GitHub Release
     runs-on: ubuntu-latest
-    
+
     permissions:
       contents: write # Needed to create releases and upload assets
-      
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Fetch full history for changelog processing
-          
-      - name: Set up JDK 17
+
+      - name: Set up JDK 22
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
-          distribution: 'temurin'
-          
-      - name: Cache Gradle packages
-        uses: actions/cache@v3
+          java-version: "22"
+          distribution: "temurin"
+          cache: gradle # Built-in Gradle caching
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v3
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-            
+          cache-read-only: false
+          gradle-home-cache-cleanup: true
+
       - name: Make gradlew executable
         run: chmod +x gradlew
-        
+
       - name: Extract version from tag
         id: get_version
         run: |
@@ -45,16 +45,16 @@ jobs:
           VERSION=${GITHUB_REF_NAME#v}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "tag_name=$GITHUB_REF_NAME" >> $GITHUB_OUTPUT
-          
+
       - name: Extract changelog for version
         id: changelog
         run: |
           # Extract changelog content for this version
           VERSION="${{ steps.get_version.outputs.version }}"
-          
+
           # Create a temporary file to store the extracted changelog
           CHANGELOG_FILE="release_notes.md"
-          
+
           # Extract content between [VERSION] and the next ## heading or ---
           # This finds the specific version section in the changelog
           awk -v version="$VERSION" '
@@ -73,7 +73,7 @@ jobs:
               print
             }
           ' CHANGELOG.md > "$CHANGELOG_FILE"
-          
+
           # If changelog is empty, try to extract from Unreleased section as fallback
           if [ ! -s "$CHANGELOG_FILE" ]; then
             echo "Version-specific changelog not found, trying Unreleased section..."
@@ -90,34 +90,36 @@ jobs:
               }
             ' CHANGELOG.md > "$CHANGELOG_FILE"
           fi
-          
+
           # If still empty, provide a default message
           if [ ! -s "$CHANGELOG_FILE" ]; then
             echo "## Release $VERSION" > "$CHANGELOG_FILE"
             echo "" >> "$CHANGELOG_FILE"
             echo "Please see the full changelog for details." >> "$CHANGELOG_FILE"
           fi
-          
+
           # Output the changelog path for use in release creation
           echo "changelog_file=$CHANGELOG_FILE" >> $GITHUB_OUTPUT
-          
+
       - name: Build with Gradle
-        run: ./gradlew build
-        
+        run: ./gradlew build --parallel --build-cache --configuration-cache --no-daemon
+        env:
+          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.workers.max=4"
+
       - name: Find built JAR file
         id: find_jar
         run: |
           # Find the main mod JAR (not sources or javadoc)
           JAR_FILE=$(find build/libs -name "*.jar" -not -name "*sources*" -not -name "*javadoc*" | head -1)
-          
+
           if [ -z "$JAR_FILE" ]; then
             echo "No JAR file found in build/libs"
             exit 1
           fi
-          
+
           echo "jar_file=$JAR_FILE" >> $GITHUB_OUTPUT
           echo "jar_name=$(basename $JAR_FILE)" >> $GITHUB_OUTPUT
-          
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
@@ -129,7 +131,7 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Upload Build Artifacts (for debugging)
         uses: actions/upload-artifact@v4
         with:
