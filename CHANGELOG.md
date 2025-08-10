@@ -17,7 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🔄 Changed
 
-- Future changes will be listed here
+- **JAR Naming Convention**: Updated JAR file naming to include Minecraft version
+  - **Old Format**: `isomomod-1.1.4.jar` 
+  - **New Format**: `isomomod-1.20.1-1.1.4.jar`
+  - **Pattern**: `${mod_id}-${minecraft_version}-${mod_version}.jar`
+  - **Benefits**: Clearer version compatibility and easier identification
 
 ### 🐛 Fixed
 
