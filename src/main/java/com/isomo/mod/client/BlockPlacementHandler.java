@@ -3,16 +3,15 @@ package com.isomo.mod.client;
 import java.util.List;
 
 import com.isomo.mod.config.BuildModeConfig;
+import com.isomo.mod.network.BlockOperationPacket;
+import com.isomo.mod.network.NetworkHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
@@ -39,8 +38,9 @@ import net.minecraftforge.fml.common.Mod;
  *   <li>Target position matches current preview positions</li>
  * </ul>
  * 
- * <p>Block placement follows the current build pattern, allowing players
- * to place multiple blocks in the pattern shape with a single click.
+ * <p>Block placement follows the current build pattern, sending network packets
+ * to the server for validation and execution. The server handles all actual
+ * world modifications to ensure proper synchronization and compatibility.
  * 
  * @author isomo
  * @since 1.0.0
@@ -140,7 +140,11 @@ public class BlockPlacementHandler {
     }
     
     /**
-     * Handles right-click block placement logic.
+     * Handles right-click block placement logic by sending a packet to the server.
+     * 
+     * <p>This method validates the placement request client-side and sends a network
+     * packet to the server for actual processing. The server will handle validation,
+     * inventory management, and world modification to ensure proper synchronization.
      * 
      * @param event the mouse input event
      * @param level the world level
@@ -167,24 +171,23 @@ public class BlockPlacementHandler {
         // Cancel the event to prevent vanilla placement
         event.setCanceled(true);
         
-        // Place blocks at all preview positions
-        int blocksPlaced = 0;
-        for (BlockPos pos : previewPositions) {
-            if (canPlaceBlockAt(level, pos, blockItem, player)) {
-                if (placeBlockAt(level, pos, blockItem, player, hitResult.getDirection())) {
-                    blocksPlaced++;
-                }
-            }
-        }
+        // Send placement packet to server
+        BlockOperationPacket packet = new BlockOperationPacket(
+            BlockOperationPacket.OperationType.PLACE,
+            previewPositions,
+            heldItem,
+            hitResult.getDirection()
+        );
         
-        // Consume items from inventory based on blocks placed
-        if (blocksPlaced > 0 && !player.getAbilities().instabuild) {
-            heldItem.shrink(blocksPlaced);
-        }
+        NetworkHandler.CHANNEL.sendToServer(packet);
     }
     
     /**
-     * Handles left-click block deletion logic.
+     * Handles left-click block deletion logic by sending a packet to the server.
+     * 
+     * <p>This method validates the deletion request client-side and sends a network
+     * packet to the server for actual processing. The server will handle validation,
+     * permission checking, item drops, and world modification.
      * 
      * @param event the mouse input event
      * @param level the world level
@@ -204,113 +207,14 @@ public class BlockPlacementHandler {
         // Cancel the event to prevent vanilla block breaking
         event.setCanceled(true);
         
-        // Delete blocks at all pattern positions
-        int blocksDeleted = 0;
-        for (BlockPos pos : patternPositions) {
-            if (canDeleteBlockAt(level, pos)) {
-                if (deleteBlockAt(level, pos, player)) {
-                    blocksDeleted++;
-                }
-            }
-        }
-    }
-    
-    /**
-     * Checks if a block can be placed at the specified position.
-     * 
-     * <p>This method verifies that the target position is valid for block
-     * placement by checking for air blocks and ensuring the placement
-     * wouldn't conflict with existing blocks or entities.
-     * 
-     * @param level the world level
-     * @param pos the position to check
-     * @param blockItem the block item to place
-     * @param player the player attempting placement
-     * @return true if the block can be placed at this position
-     */
-    private static boolean canPlaceBlockAt(Level level, BlockPos pos, BlockItem blockItem, LocalPlayer player) {
-        // Check if the position is air or replaceable
-        return level.getBlockState(pos).canBeReplaced(
-            new BlockPlaceContext(level, player, InteractionHand.MAIN_HAND, 
-                new ItemStack(blockItem), new BlockHitResult(Vec3.atCenterOf(pos), 
-                Direction.UP, pos, false))
+        // Send deletion packet to server
+        BlockOperationPacket packet = new BlockOperationPacket(
+            BlockOperationPacket.OperationType.DELETE,
+            patternPositions,
+            ItemStack.EMPTY,
+            hitResult.getDirection()
         );
-    }
-    
-    /**
-     * Places a block at the specified position.
-     * 
-     * <p>This method handles the actual block placement logic, including
-     * setting the block state and triggering appropriate placement sounds
-     * and effects.
-     * 
-     * @param level the world level
-     * @param pos the position to place the block
-     * @param blockItem the block item to place
-     * @param player the player performing the placement
-     * @param face the face direction for placement context
-     * @return true if the block was successfully placed
-     */
-    private static boolean placeBlockAt(Level level, BlockPos pos, BlockItem blockItem, 
-                                       LocalPlayer player, Direction face) {
-        ItemStack itemStack = new ItemStack(blockItem);
         
-        BlockPlaceContext context = new BlockPlaceContext(level, player, InteractionHand.MAIN_HAND,
-            itemStack, new BlockHitResult(Vec3.atCenterOf(pos), face, pos, false));
-        
-        InteractionResult result = blockItem.place(context);
-        
-        return result.consumesAction();
-    }
-    
-    /**
-     * Checks if a block can be deleted at the specified position.
-     * 
-     * <p>This method verifies that the target position contains a block
-     * that can be safely deleted, excluding protected blocks like bedrock.
-     * 
-     * @param level the world level
-     * @param pos the position to check
-     * @return true if the block can be deleted at this position
-     */
-    private static boolean canDeleteBlockAt(Level level, BlockPos pos) {
-        var blockState = level.getBlockState(pos);
-        
-        // Don't delete air blocks
-        if (blockState.isAir()) {
-            return false;
-        }
-        
-        // Don't delete bedrock or other unbreakable blocks
-        if (blockState.getDestroySpeed(level, pos) < 0) {
-            return false;
-        }
-        
-        return true;
-    }
-    
-    /**
-     * Deletes a block at the specified position.
-     * 
-     * <p>This method handles the actual block deletion logic, including
-     * dropping items and triggering appropriate block breaking effects.
-     * 
-     * @param level the world level
-     * @param pos the position to delete the block from
-     * @param player the player performing the deletion
-     * @return true if the block was successfully deleted
-     */
-    private static boolean deleteBlockAt(Level level, BlockPos pos, LocalPlayer player) {
-        var blockState = level.getBlockState(pos);
-        
-        // Remove the block
-        boolean success = level.removeBlock(pos, false);
-        
-        if (success && !player.getAbilities().instabuild) {
-            // Drop the block as an item (client-side, items will be handled by server)
-            blockState.getBlock().playerWillDestroy(level, pos, blockState, player);
-        }
-        
-        return success;
+        NetworkHandler.CHANNEL.sendToServer(packet);
     }
 }

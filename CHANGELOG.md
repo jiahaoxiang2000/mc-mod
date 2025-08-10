@@ -7,21 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### ✨ Added
-
-- Future features will be listed here
-
 ### 🔄 Changed
 
-- Future changes will be listed here
+- **Client-Server Architecture**: Completely redesigned block operations to use proper client-server communication
+  - **Client-side changes**: BlockPlacementHandler now sends network packets instead of performing direct block operations
+  - **Server-side validation**: All block placement and deletion operations are now validated and executed server-side
+  - **Network protocol**: Added comprehensive packet system with BlockOperationPacket for client-server communication
+  - **Multiplayer support**: Block operations now properly synchronize across all connected players
+  - **Persistence**: Block changes now correctly save with the world and persist across server restarts
+  - **Compatibility**: Integrated with Forge event system for proper mod compatibility and protection system support
 
 ### 🐛 Fixed
 
-- Future bug fixes will be listed here
+- **Block persistence**: Fixed blocks not saving properly - all block operations now persist correctly across world reloads
+- **Multiplayer synchronization**: Fixed desync issues where block changes only appeared on client side
+- **Server validation**: Added proper server-side validation for all block operations to prevent cheating
 
 ### ⚡ Performance
 
 - **Batch wireframe rendering**: All wireframes rendered in a single batch operation with one matrix calculation
+- **Network optimization**: Bulk block operations sent as single packets to reduce network overhead
 
 ---
 

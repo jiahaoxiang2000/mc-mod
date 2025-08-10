@@ -1,6 +1,7 @@
 package com.isomo.mod;
 
 import com.isomo.mod.command.BuildModeCommand;
+import com.isomo.mod.network.NetworkHandler;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
@@ -90,6 +91,10 @@ public class IsomoMod
     {
         // Some common setup code
         LOGGER.info("HELLO FROM COMMON SETUP");
+        
+        // Register network packets
+        NetworkHandler.registerPackets();
+        LOGGER.info("Registered network packets");
 
         if (Config.logDirtBlock)
             LOGGER.info("DIRT BLOCK >> {}", ForgeRegistries.BLOCKS.getKey(Blocks.DIRT));

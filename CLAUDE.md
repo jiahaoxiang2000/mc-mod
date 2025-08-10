@@ -34,25 +34,3 @@ When finishing code changes, you MUST:
 3. **Comprehensive Documentation**: Ensure all new code has complete Javadoc comments
 4. **Cross-Reference**: Add appropriate `@see` tags to link related functionality
 5. **Validation**: Include proper null checking and parameter validation
-
-### Example Documentation Style
-
-```java
-/**
- * Advances to the next build pattern in the sequence.
- *
- * <p>Cycles through available patterns in a predefined order:
- * Single Block → Wall 3x3 → Floor 5x5 → Pillar 5H → Line H5 → (back to Single Block)
- * When the last pattern is reached, wraps around to the first pattern.
- *
- * <p>This method is typically called in response to user input for pattern
- * switching, such as mouse wheel scrolling or keyboard shortcuts.
- *
- * @see BuildPatterns#getNext(BuildPattern)
- * @see #previousPattern()
- * @see #getCurrentPattern()
- */
-public void nextPattern() {
-    currentPattern = BuildPatterns.getNext(currentPattern);
-}
-```
