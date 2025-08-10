@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### ✨ Added
+
+- Future features will be listed here
+
+### 🔄 Changed
+
+- Future changes will be listed here
+
+### 🐛 Fixed
+
+- Future bug fixes will be listed here
+
+### ⚡ Performance
+
+- Future performance improvements will be listed here
+
+---
+
+## [1.1.0] - 2025-08-10
+
 ### 🔄 Changed
 
 - **Client-Server Architecture**: Completely redesigned block operations to use proper client-server communication
@@ -22,10 +42,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Block persistence**: Fixed blocks not saving properly - all block operations now persist correctly across world reloads
 - **Multiplayer synchronization**: Fixed desync issues where block changes only appeared on client side
 - **Server validation**: Added proper server-side validation for all block operations to prevent cheating
+- **API deprecation**: Updated ResourceLocation usage to use fromNamespaceAndPath() instead of deprecated constructor
 
 ### ⚡ Performance
 
-- **Batch wireframe rendering**: All wireframes rendered in a single batch operation with one matrix calculation
 - **Network optimization**: Bulk block operations sent as single packets to reduce network overhead
 
 ---
@@ -120,7 +140,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version Links
 
-- [Unreleased]: https://github.com/username/isomo-mod/compare/v1.0.0...HEAD
+- [Unreleased]: https://github.com/username/isomo-mod/compare/v1.1.0...HEAD
+- [1.1.0]: https://github.com/username/isomo-mod/compare/v1.0.0...v1.1.0
 - [1.0.0]: https://github.com/username/isomo-mod/releases/tag/v1.0.0
 
 ## Links
