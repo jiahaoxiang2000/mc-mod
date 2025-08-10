@@ -5,6 +5,10 @@ All notable changes to the Isomo Mod will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Version Links
+
+[Unreleased](https://github.com/jiahaoxiang2000/mc-mod/compare/v1.1.4...HEAD) [1.1.4](https://github.com/jiahaoxiang2000/mc-mod/compare/v1.1.3...v1.1.4) [1.1.3](https://github.com/jiahaoxiang2000/mc-mod/compare/v1.1.2...v1.1.3) [1.1.2](https://github.com/jiahaoxiang2000/mc-mod/compare/v1.1.1...v1.1.2) [1.1.1](https://github.com/jiahaoxiang2000/mc-mod/compare/v1.1.0...v1.1.1) [1.1.0](https://github.com/jiahaoxiang2000/mc-mod/compare/v1.0.0...v1.1.0) [1.0.0](https://github.com/jiahaoxiang2000/mc-mod/releases/tag/v1.0.0)
+
 ## [Unreleased]
 
 ### ✨ Added
@@ -22,6 +26,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### ⚡ Performance
 
 - Future performance improvements will be listed here
+
+---
+
+## [1.1.4] - 2025-08-10
+
+### 🐛 Fixed
+
+- **ResourceLocation Compatibility**: Fixed NoSuchMethodError preventing mod from loading in Minecraft 1.20.1
+  - **API Issue**: Reverted ResourceLocation.fromNamespaceAndPath() which doesn't exist in MC 1.20.1
+  - **Solution**: Use deprecated ResourceLocation constructor for backward compatibility
+  - **Impact**: Mod now loads properly without runtime errors
+
+### 📚 Documentation
+
+- **Version Management**: Added guidelines to CLAUDE.md for keeping git tags and gradle.properties in sync
+- **Build Process**: Improved documentation for release management
 
 ---
 
@@ -186,15 +206,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 🔒 **Security** for vulnerability fixes
 - 📚 **Documentation** for documentation changes
 - ⚡ **Performance** for performance improvements
-
-## Version Links
-
-- [Unreleased](https://github.com/jiahaoxiang2000/mc-mod/compare/v1.1.3...HEAD)
-- [1.1.3](https://github.com/jiahaoxiang2000/mc-mod/compare/v1.1.2...v1.1.3)
-- [1.1.2](https://github.com/jiahaoxiang2000/mc-mod/compare/v1.1.1...v1.1.2)
-- [1.1.1](https://github.com/jiahaoxiang2000/mc-mod/compare/v1.1.0...v1.1.1)
-- [1.1.0](https://github.com/jiahaoxiang2000/mc-mod/compare/v1.0.0...v1.1.0)
-- [1.0.0](https://github.com/jiahaoxiang2000/mc-mod/releases/tag/v1.0.0)
 
 ## Links
 
