@@ -43,7 +43,7 @@ public class NetworkHandler {
      * channel identifier.
      */
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
-        ResourceLocation.fromNamespaceAndPath(IsomoMod.MODID, "main"),
+        new ResourceLocation(IsomoMod.MODID, "main"),
         () -> PROTOCOL_VERSION,
         PROTOCOL_VERSION::equals,
         PROTOCOL_VERSION::equals
