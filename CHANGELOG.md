@@ -8,13 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### ✨ Added
+
 - Future features will be listed here
 
 ### 🔄 Changed
+
 - Future changes will be listed here
 
 ### 🐛 Fixed
+
 - Future bug fixes will be listed here
+
+### ⚡ Performance
+
+- **Batch wireframe rendering**: All wireframes rendered in a single batch operation with one matrix calculation
 
 ---
 

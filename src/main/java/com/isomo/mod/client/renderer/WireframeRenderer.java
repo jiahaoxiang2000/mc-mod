@@ -74,41 +74,27 @@ public class WireframeRenderer {
         BuildModeConfig config = BuildModeConfig.getInstance();
         float[] wireframeColor = config.getWireframeColor();
         
-        for (BlockPos pos : positions) {
-            renderBlockWireframe(poseStack, vertexConsumer, pos, cameraPos, wireframeColor);
-        }
+        // Batch render all wireframes to reduce matrix operations
+        renderWireframeBatch(poseStack, vertexConsumer, positions, cameraPos, wireframeColor);
     }
     
     /**
-     * Renders a wireframe outline for a single block position.
+     * Renders multiple wireframes in a single batch to optimize performance.
      * 
-     * <p>This method draws a complete wireframe cube consisting of 12 lines that
-     * form the edges of a standard Minecraft block. The wireframe is positioned
-     * relative to the camera position to ensure proper world-space rendering.
-     * 
-     * <p>The wireframe structure includes:
-     * <ul>
-     *   <li>4 edges for the bottom face</li>
-     *   <li>4 edges for the top face</li>
-     *   <li>4 vertical edges connecting bottom and top</li>
-     * </ul>
+     * <p>This method reduces the number of matrix operations by using a single
+     * pose stack transformation for all wireframes. Instead of pushing/popping
+     * the pose stack for each wireframe, it calculates relative positions directly
+     * and renders all wireframes with minimal matrix overhead.
      * 
      * @param poseStack the transformation matrix stack for positioning
      * @param vertexConsumer the vertex consumer for drawing lines
-     * @param pos the world block position to render wireframe at
+     * @param positions list of all block positions to render wireframes for
      * @param cameraPos the camera position for relative positioning calculations
      * @param color RGBA color array [red, green, blue, alpha] with values 0.0-1.0
      */
-    private static void renderBlockWireframe(PoseStack poseStack, VertexConsumer vertexConsumer, 
-                                           BlockPos pos, Vec3 cameraPos, float[] color) {
+    private static void renderWireframeBatch(PoseStack poseStack, VertexConsumer vertexConsumer,
+                                           List<BlockPos> positions, Vec3 cameraPos, float[] color) {
         poseStack.pushPose();
-        
-        // Translate to block position relative to camera
-        double x = pos.getX() - cameraPos.x;
-        double y = pos.getY() - cameraPos.y;
-        double z = pos.getZ() - cameraPos.z;
-        
-        poseStack.translate(x, y, z);
         Matrix4f matrix = poseStack.last().pose();
         
         float r = color[0];
@@ -116,26 +102,56 @@ public class WireframeRenderer {
         float b = color[2];
         float a = color[3];
         
-        // Draw the 12 edges of a block wireframe
-        // Bottom face edges (Y=0 plane)
-        addLine(vertexConsumer, matrix, 0, 0, 0, 1, 0, 0, r, g, b, a);
-        addLine(vertexConsumer, matrix, 1, 0, 0, 1, 0, 1, r, g, b, a);
-        addLine(vertexConsumer, matrix, 1, 0, 1, 0, 0, 1, r, g, b, a);
-        addLine(vertexConsumer, matrix, 0, 0, 1, 0, 0, 0, r, g, b, a);
-        
-        // Top face edges (Y=1 plane)
-        addLine(vertexConsumer, matrix, 0, 1, 0, 1, 1, 0, r, g, b, a);
-        addLine(vertexConsumer, matrix, 1, 1, 0, 1, 1, 1, r, g, b, a);
-        addLine(vertexConsumer, matrix, 1, 1, 1, 0, 1, 1, r, g, b, a);
-        addLine(vertexConsumer, matrix, 0, 1, 1, 0, 1, 0, r, g, b, a);
-        
-        // Vertical edges (connecting bottom to top)
-        addLine(vertexConsumer, matrix, 0, 0, 0, 0, 1, 0, r, g, b, a);
-        addLine(vertexConsumer, matrix, 1, 0, 0, 1, 1, 0, r, g, b, a);
-        addLine(vertexConsumer, matrix, 1, 0, 1, 1, 1, 1, r, g, b, a);
-        addLine(vertexConsumer, matrix, 0, 0, 1, 0, 1, 1, r, g, b, a);
+        // Render all wireframes using the same matrix to reduce operations
+        for (BlockPos pos : positions) {
+            renderBlockWireframeDirect(vertexConsumer, matrix, pos, cameraPos, r, g, b, a);
+        }
         
         poseStack.popPose();
+    }
+    
+    /**
+     * Renders a wireframe directly without individual matrix transformations.
+     * 
+     * <p>This optimized method calculates world-relative positions directly
+     * instead of using pose stack transformations, reducing matrix operation
+     * overhead during batch rendering.
+     * 
+     * @param vertexConsumer the vertex consumer for drawing lines
+     * @param matrix the transformation matrix for vertex positioning
+     * @param pos the world block position to render wireframe at
+     * @param cameraPos the camera position for relative positioning calculations
+     * @param r red color component (0.0-1.0)
+     * @param g green color component (0.0-1.0)
+     * @param b blue color component (0.0-1.0)
+     * @param a alpha transparency component (0.0-1.0)
+     */
+    private static void renderBlockWireframeDirect(VertexConsumer vertexConsumer, Matrix4f matrix,
+                                                 BlockPos pos, Vec3 cameraPos,
+                                                 float r, float g, float b, float a) {
+        // Calculate relative position once
+        float x = (float) (pos.getX() - cameraPos.x);
+        float y = (float) (pos.getY() - cameraPos.y);
+        float z = (float) (pos.getZ() - cameraPos.z);
+        
+        // Draw the 12 edges of a block wireframe with pre-calculated offsets
+        // Bottom face edges (Y=0 plane)
+        addLine(vertexConsumer, matrix, x, y, z, x + 1, y, z, r, g, b, a);
+        addLine(vertexConsumer, matrix, x + 1, y, z, x + 1, y, z + 1, r, g, b, a);
+        addLine(vertexConsumer, matrix, x + 1, y, z + 1, x, y, z + 1, r, g, b, a);
+        addLine(vertexConsumer, matrix, x, y, z + 1, x, y, z, r, g, b, a);
+        
+        // Top face edges (Y=1 plane)
+        addLine(vertexConsumer, matrix, x, y + 1, z, x + 1, y + 1, z, r, g, b, a);
+        addLine(vertexConsumer, matrix, x + 1, y + 1, z, x + 1, y + 1, z + 1, r, g, b, a);
+        addLine(vertexConsumer, matrix, x + 1, y + 1, z + 1, x, y + 1, z + 1, r, g, b, a);
+        addLine(vertexConsumer, matrix, x, y + 1, z + 1, x, y + 1, z, r, g, b, a);
+        
+        // Vertical edges (connecting bottom to top)
+        addLine(vertexConsumer, matrix, x, y, z, x, y + 1, z, r, g, b, a);
+        addLine(vertexConsumer, matrix, x + 1, y, z, x + 1, y + 1, z, r, g, b, a);
+        addLine(vertexConsumer, matrix, x + 1, y, z + 1, x + 1, y + 1, z + 1, r, g, b, a);
+        addLine(vertexConsumer, matrix, x, y, z + 1, x, y + 1, z + 1, r, g, b, a);
     }
     
     /**
