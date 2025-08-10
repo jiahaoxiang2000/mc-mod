@@ -31,6 +31,7 @@ When finishing code changes, you MUST:
 
 1. **Update CHANGELOG.md**: Add detailed entry for new features/changes following the existing format
 2. **Update README.md**: Reflect any new functionality or changes in the README
-3. **Comprehensive Documentation**: Ensure all new code has complete Javadoc comments
-4. **Cross-Reference**: Add appropriate `@see` tags to link related functionality
-5. **Validation**: Include proper null checking and parameter validation
+3. **Update gradle.properties**: When creating version tags, ALWAYS update `mod_version` in gradle.properties to match the tag version
+4. **Comprehensive Documentation**: Ensure all new code has complete Javadoc comments
+5. **Cross-Reference**: Add appropriate `@see` tags to link related functionality
+6. **Validation**: Include proper null checking and parameter validation
