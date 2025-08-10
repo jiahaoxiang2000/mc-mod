@@ -189,12 +189,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version Links
 
-- [Unreleased]: https://github.com/username/isomo-mod/compare/v1.1.3...HEAD
-- [1.1.3]: https://github.com/username/isomo-mod/compare/v1.1.2...v1.1.3
-- [1.1.2]: https://github.com/username/isomo-mod/compare/v1.1.1...v1.1.2
-- [1.1.1]: https://github.com/username/isomo-mod/compare/v1.1.0...v1.1.1
-- [1.1.0]: https://github.com/username/isomo-mod/compare/v1.0.0...v1.1.0
-- [1.0.0]: https://github.com/username/isomo-mod/releases/tag/v1.0.0
+- [Unreleased]: https://github.com/jiahaoxiang2000/mc-mod/compare/v1.1.3...HEAD
+- [1.1.3]: https://github.com/jiahaoxiang2000/mc-mod/compare/v1.1.2...v1.1.3
+- [1.1.2]: https://github.com/jiahaoxiang2000/mc-mod/compare/v1.1.1...v1.1.2
+- [1.1.1]: https://github.com/jiahaoxiang2000/mc-mod/compare/v1.1.0...v1.1.1
+- [1.1.0]: https://github.com/jiahaoxiang2000/mc-mod/compare/v1.0.0...v1.1.0
+- [1.0.0]: https://github.com/jiahaoxiang2000/mc-mod/releases/tag/v1.0.0
 
 ## Links
 
