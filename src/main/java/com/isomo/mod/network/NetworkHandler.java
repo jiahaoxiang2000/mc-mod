@@ -1,9 +1,9 @@
 package com.isomo.mod.network;
 
 import com.isomo.mod.IsomoMod;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 /**
@@ -43,7 +43,7 @@ public class NetworkHandler {
      * channel identifier.
      */
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
-        new ResourceLocation(IsomoMod.MODID, "main"),
+        ResourceLocation.fromNamespaceAndPath(IsomoMod.MODID, "main"),
         () -> PROTOCOL_VERSION,
         PROTOCOL_VERSION::equals,
         PROTOCOL_VERSION::equals
